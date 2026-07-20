@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
+import FloatingPetIcons from "../FloatingPetIcons";
 
 interface PageHeroProps {
   eyebrow?: string;
@@ -9,14 +10,32 @@ interface PageHeroProps {
 }
 
 export default function PageHero({ eyebrow, title, subtitle }: PageHeroProps) {
+  const pointerX = useMotionValue(-1000);
+  const pointerY = useMotionValue(-1000);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    pointerX.set(e.clientX - rect.left);
+    pointerY.set(e.clientY - rect.top);
+  };
+
+  const handleMouseLeave = () => {
+    pointerX.set(-1000);
+    pointerY.set(-1000);
+  };
+
   return (
     <section
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="relative pt-24 pb-32 overflow-hidden z-10 bg-yellow-400"
       aria-label={`${title} — page header`}
     >
       {/* Aurora Radial Ambient Glow removed for flat yellow theme */}
       <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
       </div>
+
+      <FloatingPetIcons mouseX={pointerX} mouseY={pointerY} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         

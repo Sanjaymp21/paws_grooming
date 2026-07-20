@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import AIAssistant from "@/components/AIAssistant";
 import PageTransition from "@/components/ui/PageTransition";
 import BackgroundDecorations from "@/components/ui/BackgroundDecorations";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import CursorPawTrail from "@/components/ui/CursorPawTrail";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -47,29 +47,28 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-inter min-h-screen flex flex-col text-slate-900 antialiased relative`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {/* Skipping to main content */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-zinc-900 focus:text-white focus:rounded-lg focus:font-semibold focus:text-sm"
-          >
-            Skip to main content
-          </a>
+        {/* Skipping to main content */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-zinc-900 focus:text-white focus:rounded-lg focus:font-semibold focus:text-sm"
+        >
+          Skip to main content
+        </a>
 
-          {/* Global Premium Background Layers */}
-          <BackgroundDecorations />
+        {/* Global Premium Background Layers */}
+        <BackgroundDecorations />
 
-          <Navbar />
+        <Navbar />
 
-          <main id="main-content" className="flex-1 flex flex-col pt-24 relative z-10">
-            <PageTransition>
-              {children}
-            </PageTransition>
-          </main>
+        <main id="main-content" className="flex-1 flex flex-col pt-24 relative z-10">
+          <PageTransition>
+            {children}
+          </PageTransition>
+        </main>
 
-          <Footer />
-          <AIAssistant />
-        </ThemeProvider>
+        <Footer />
+        <AIAssistant />
+        <CursorPawTrail />
       </body>
     </html>
   );

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Award, ShieldCheck, Heart, Sparkles, ArrowRight, Star, MapPin, Bone, Scissors } from "lucide-react";
+import { Award, ShieldCheck, Heart, Sparkles, ArrowRight, Star, MapPin, Bone, Scissors, Gift } from "lucide-react";
 
 // Sourcing icons and badges
 const trustBadges = [
@@ -13,7 +13,7 @@ const trustBadges = [
   { icon: Heart, label: "Stress-Free Care", color: "text-pink-500 dark:text-pink-400", bg: "bg-pink-50 dark:bg-slate-800/80" },
 ];
 
-import AnimatedBones from "./AnimatedBones";
+import FloatingPetIcons from "./FloatingPetIcons";
 
 export default function Hero() {
   // Parallax Motion Setup
@@ -81,8 +81,8 @@ export default function Hero() {
         />
       </div>
 
-      {/* 2. LAYER ORDER: Animated Bones (z-[2]) */}
-      <AnimatedBones mouseX={pointerX} mouseY={pointerY} />
+      {/* 2. LAYER ORDER: Floating Pet Icons (z-[2]) */}
+      <FloatingPetIcons mouseX={pointerX} mouseY={pointerY} />
 
       {/* 3. LAYER ORDER: Decorative Shapes (z-[3]) */}
       <motion.div 
@@ -228,27 +228,46 @@ export default function Hero() {
                   <ArrowRight className="h-4.5 w-4.5 text-zinc-900 dark:text-slate-200 group-hover:translate-x-1.5 transition-transform duration-200" aria-hidden="true" />
                 </Link>
               </motion.div>
+
+              {/* Tertiary CTA (View Reward) */}
+              <motion.div
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.96 }}
+                className="group"
+              >
+                <Link 
+                  href="/packages#rewards-dashboard" 
+                  className="btn-secondary type-button flex items-center justify-center gap-2 cursor-pointer font-bold px-6 py-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/70 dark:bg-slate-900/80 text-slate-800 dark:text-slate-200 hover:border-slate-800 dark:hover:border-yellow-400/50 hover:bg-white dark:hover:bg-slate-900 transition-all duration-300"
+                >
+                  View Reward
+                  <Gift className="h-4.5 w-4.5 text-zinc-900 dark:text-slate-200 group-hover:scale-110 transition-transform duration-200" aria-hidden="true" />
+                </Link>
+              </motion.div>
             </motion.div>
 
-            {/* Google Rating badge (Stagger item 5) */}
+            {/* Special Offer Highlight (Stagger item 5) */}
             <motion.div
               variants={{
                 hidden: { opacity: 0, y: 10 },
                 show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
               }}
-              className="flex items-center gap-4 pt-1"
+              className="pt-2 max-w-md"
             >
-              <div
-                className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/8 shadow-sm backdrop-blur-sm"
+              <Link 
+                href="/packages#membership" 
+                className="group block p-4 sm:p-5 rounded-[24px] bg-gradient-to-r from-zinc-900 to-sky-600 dark:from-slate-900 dark:to-indigo-600 text-white shadow-lg relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               >
-                <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4.5 w-4.5 fill-amber-400 text-amber-400" aria-hidden="true" />
-                  ))}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-xl pointer-events-none" />
+                <div className="flex gap-4 items-center relative z-10">
+                  <div className="h-11 w-11 rounded-2xl bg-white/10 flex items-center justify-center text-yellow-100 font-black text-lg shrink-0 shadow-inner group-hover:scale-105 transition-all duration-300">
+                    3+1
+                  </div>
+                  <div>
+                    <h4 className="font-poppins font-bold text-base">Groom your pet 3 times</h4>
+                    <p className="text-[11px] sm:text-xs text-sky-100/90 font-inter mt-0.5">Get the 4th Grooming completely FREE! Applied automatically.</p>
+                  </div>
                 </div>
-                <span className="text-sm font-black text-slate-850 dark:text-slate-200">4.9 / 5</span>
-                <span className="text-xs text-slate-400 dark:text-slate-500">230+ ratings</span>
-              </div>
+              </Link>
             </motion.div>
 
             {/* Stagger item 6 - Trust Badges */}

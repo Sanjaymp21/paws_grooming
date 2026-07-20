@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { MessageSquare, X, Send, Award, Sparkles, AlertCircle, Sun, Moon } from "lucide-react";
+import { MessageSquare, X, Send, Award, Sparkles, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
 
 interface ChatMessage {
   id: string;
@@ -18,15 +17,6 @@ export default function AIAssistant() {
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
-
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme, resolvedTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const isDark = mounted && (theme === "dark" || resolvedTheme === "dark");
 
   // Initial greeting
   useEffect(() => {
@@ -140,48 +130,6 @@ export default function AIAssistant() {
       {/* Floating Buttons Group Container */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-4 items-center pointer-events-none">
         
-        {/* Theme Toggle Button (Top) */}
-        <div className="group relative pointer-events-auto">
-          {/* Tooltip on hover */}
-          <div className="absolute right-full top-1/2 -translate-y-1/2 mr-3 px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-800 text-white text-[10px] font-bold tracking-wide uppercase opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 shadow-lg whitespace-nowrap border border-white/10 hidden md:block">
-            {isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          </div>
-
-          <motion.button
-            onClick={() => setTheme(isDark ? "light" : "dark")}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-            className="lg:h-16 lg:w-16 md:h-14 md:w-14 h-[52px] w-[52px] rounded-full text-white flex items-center justify-center cursor-pointer relative shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 focus-visible:outline-none focus:outline-none transition-shadow"
-            style={{ background: "linear-gradient(135deg, #1d4ed8, #000000)", boxShadow: "0 8px 32px rgba(29,78,216,0.4)" }}
-            aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {isDark ? (
-                <motion.div
-                  key="sun"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <Sun className="lg:h-7 lg:w-7 md:h-6 md:w-6 h-5.5 w-5.5" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="moon"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <Moon className="lg:h-7 lg:w-7 md:h-6 md:w-6 h-5.5 w-5.5" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.button>
-        </div>
-
         {/* Chatbot Toggle Button (Bottom) */}
         <div className="group relative pointer-events-auto">
           {/* Tooltip on hover */}
