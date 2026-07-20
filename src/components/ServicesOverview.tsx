@@ -8,54 +8,54 @@ import { Droplets, Scissors, Bone, Ear, Sparkles, Heart, ArrowRight } from "luci
 const services = [
   {
     icon: Droplets,
-    gradient: "from-sky-400 to-cyan-500",
-    glow: "rgba(14,165,233,0.22)",
-    glowBorder: "rgba(14,165,233,0.16)",
+    gradient: "from-sky-blue to-royal-blue",
+    glow: "rgba(37,99,235,0.06)",
+    glowBorder: "rgba(37,99,235,0.12)",
     title: "Warm Herbal Bath",
     desc: "pH-balanced, hypoallergenic shampoos matched to your pet's coat type — gentle enough for sensitive skin and puppies.",
     tags: ["All Breeds", "Puppies OK", "Cat-Friendly"],
   },
   {
     icon: Scissors,
-    gradient: "from-indigo-500 to-violet-600",
-    glow: "rgba(99,102,241,0.22)",
-    glowBorder: "rgba(99,102,241,0.16)",
+    gradient: "from-indigo-custom to-purple-custom",
+    glow: "rgba(67,56,202,0.06)",
+    glowBorder: "rgba(67,56,202,0.12)",
     title: "Breed-Specific Styling",
     desc: "Custom cuts that follow your breed's natural coat structure — from Teddy Bear cuts on Shih Tzus to Lion cuts on Persians.",
     tags: ["Dogs & Cats", "Show Styles", "Custom Cuts"],
   },
   {
     icon: Bone,
-    gradient: "from-amber-400 to-orange-500",
-    glow: "rgba(245,158,11,0.22)",
-    glowBorder: "rgba(245,158,11,0.16)",
+    gradient: "from-peach-custom to-soft-yellow",
+    glow: "rgba(245,158,11,0.06)",
+    glowBorder: "rgba(245,158,11,0.12)",
     title: "Nail Trimming & Filing",
     desc: "Careful, anxiety-free nail care using precision clippers and a smooth finishing file. No quicks, no stress.",
     tags: ["All Sizes", "Fear-Free", "Monthly Rec."],
   },
   {
     icon: Ear,
-    gradient: "from-rose-400 to-pink-600",
-    glow: "rgba(244,63,94,0.22)",
-    glowBorder: "rgba(244,63,94,0.16)",
+    gradient: "from-pink-custom to-coral-custom",
+    glow: "rgba(236,72,153,0.06)",
+    glowBorder: "rgba(236,72,153,0.12)",
     title: "Ear Cleaning & De-waxing",
     desc: "Deep ear cleaning to remove wax buildup and debris — vital for tropical climates like Coimbatore to prevent infections.",
     tags: ["Infection Prevention", "Gentle", "All Pets"],
   },
   {
     icon: Sparkles,
-    gradient: "from-teal-400 to-emerald-500",
-    glow: "rgba(20,184,166,0.22)",
-    glowBorder: "rgba(20,184,166,0.16)",
+    gradient: "from-mint-green to-sky-blue",
+    glow: "rgba(52,211,153,0.06)",
+    glowBorder: "rgba(52,211,153,0.12)",
     title: "Luxury Spa Add-ons",
     desc: "Organic oatmeal mud bath, deep coat conditioning, soothing aromatherapy, and paw butter massage for the ultimate pet experience.",
     tags: ["Anxiety Relief", "Skin Therapy", "Premium"],
   },
   {
     icon: Heart,
-    gradient: "from-emerald-400 to-green-600",
-    glow: "rgba(16,185,129,0.22)",
-    glowBorder: "rgba(16,185,129,0.16)",
+    gradient: "from-cyan-custom to-indigo-custom",
+    glow: "rgba(34,211,238,0.06)",
+    glowBorder: "rgba(34,211,238,0.12)",
     title: "Pet-Safe Teeth Cleaning",
     desc: "Enzymatic pet toothpaste and soft brushing to control plaque, prevent periodontal disease, and keep breath fresh.",
     tags: ["No Sedation", "Vet-Recommended", "Premium+"],
@@ -63,37 +63,29 @@ const services = [
 ];
 
 const process = [
-  { step: "1", title: "Booking", desc: "Select your package and preferred timeslot online.", color: "from-sky-400 to-blue-600", glow: "rgba(14,165,233,0.30)" },
-  { step: "2", title: "Health Check", desc: "Brief skin, coat, ear, and nail assessment on arrival.", color: "from-indigo-400 to-violet-600", glow: "rgba(99,102,241,0.30)" },
-  { step: "3", title: "Bath & Dry", desc: "Warm herbal bath, blow-dry, and detangle.", color: "from-teal-400 to-cyan-600", glow: "rgba(20,184,166,0.30)" },
-  { step: "4", title: "Styling", desc: "Breed-specific cut and finishing touches.", color: "from-rose-400 to-pink-600", glow: "rgba(244,63,94,0.30)" },
-  { step: "5", title: "Quality Check", desc: "Full inspection before handover.", color: "from-amber-400 to-orange-600", glow: "rgba(245,158,11,0.30)" },
-  { step: "6", title: "Pickup", desc: "Your happy, fresh pet ready to go!", color: "from-emerald-400 to-green-600", glow: "rgba(16,185,129,0.30)" },
+  { step: "1", title: "Booking", desc: "Select your package and preferred timeslot online.", color: "from-sky-blue to-royal-blue", glow: "rgba(37,99,235,0.15)" },
+  { step: "2", title: "Health Check", desc: "Brief skin, coat, ear, and nail assessment on arrival.", color: "from-indigo-custom to-purple-custom", glow: "rgba(67,56,202,0.15)" },
+  { step: "3", title: "Bath & Dry", desc: "Warm herbal bath, blow-dry, and detangle.", color: "from-mint-green to-cyan-custom", glow: "rgba(52,211,153,0.15)" },
+  { step: "4", title: "Styling", desc: "Breed-specific cut and finishing touches.", color: "from-pink-custom to-coral-custom", glow: "rgba(236,72,153,0.15)" },
+  { step: "5", title: "Quality Check", desc: "Full inspection before handover.", color: "from-peach-custom to-soft-yellow", glow: "rgba(245,158,11,0.15)" },
+  { step: "6", title: "Pickup", desc: "Your happy, fresh pet ready to go!", color: "from-mint-green to-sky-blue", glow: "rgba(52,211,153,0.15)" },
 ];
 
 export default function ServicesOverview() {
   return (
     <>
-      {/* Services Grid */}
-      <section className="py-28 relative overflow-hidden">
-        {/* Premium background */}
-        <div className="absolute inset-0" aria-hidden="true">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(145deg, #FAFCFF 0%, #EEF6FF 50%, #F5F3FF 100%)",
-            }}
-          />
-          <div className="absolute top-0 right-0 w-[700px] h-[600px] rounded-full bg-sky-200/35 blur-[130px]" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[500px] rounded-full bg-indigo-200/30 blur-[110px]" />
-          <div className="absolute inset-0 dot-grid" />
+      {/* Services Grid Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          {/* Keeping center clean and bright */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-white/70 blur-2xl rounded-full" />
         </div>
 
-        {/* Top line */}
         <div className="section-top-line absolute" aria-hidden="true" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          {/* Section header */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          
+          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -101,56 +93,61 @@ export default function ServicesOverview() {
             transition={{ duration: 0.6 }}
             className="section-header"
           >
-            <p className="type-eyebrow">Our Services</p>
-            <h2 className="type-h1 mt-2 mb-5">Everything Your Pet Needs</h2>
-            <p className="type-body text-slate-500">
+            <span className="type-eyebrow">Our Services</span>
+            <h2 className="type-section-heading mt-2.5 mb-4">Everything Your Pet Needs</h2>
+            <p className="type-section-subtitle max-w-xl mx-auto">
               Comprehensive grooming services using pet-safe, hypoallergenic products — tailored to every breed and coat type.
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+          {/* Cards Grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((s, i) => (
               <motion.div
                 key={s.title}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.55, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative rounded-[26px] p-7 card-hover overflow-hidden"
+                transition={{ duration: 0.55, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative rounded-[24px] p-7 glass-card card-hover overflow-hidden flex flex-col justify-between"
                 style={{
-                  background: "rgba(255,255,255,0.88)",
-                  backdropFilter: "blur(28px)",
                   border: `1px solid ${s.glowBorder}`,
-                  boxShadow: `0 8px 40px ${s.glow}, 0 2px 10px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.95)`,
+                  boxShadow: `0 15px 40px ${s.glow}, inset 0 1px 0 rgba(255, 255, 255, 0.7)`,
                 }}
               >
-                {/* Gradient stripe */}
-                <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${s.gradient}`} aria-hidden="true" />
+                {/* Thin top gradient indicator */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${s.gradient}`} aria-hidden="true" />
 
-                {/* Hover glow bg */}
+                {/* Ambient glow highlight on hover */}
                 <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[26px]"
-                  style={{ background: `radial-gradient(ellipse 65% 65% at 30% 20%, ${s.glow}, transparent)` }}
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: `radial-gradient(circle at 10% 10%, ${s.glow}, transparent 80%)` }}
                   aria-hidden="true"
                 />
 
-                {/* Icon */}
-                <div
-                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-250 relative z-10`}
-                  style={{ boxShadow: `0 8px 28px ${s.glow}` }}
-                  aria-hidden="true"
-                >
-                  <s.icon className="h-6 w-6 text-white" />
+                {/* Service Details Container */}
+                <div>
+                  {/* Icon */}
+                  <div
+                    className={`w-13 h-13 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center text-white mb-6 group-hover:scale-105 transition-transform duration-300 relative z-10 shadow-sm`}
+                  >
+                    <s.icon className="h-6 w-6 text-white" />
+                  </div>
+
+                  <h3 className="type-card-title mb-3 text-slate-900 group-hover:text-zinc-900 transition-colors duration-200">
+                    {s.title}
+                  </h3>
+                  <p className="type-small text-slate-500 text-sm leading-relaxed mb-6">
+                    {s.desc}
+                  </p>
                 </div>
 
-                <div className="flex-1 relative z-10">
-                  <h3 className="type-h3 mb-3">{s.title}</h3>
-                  <p className="type-small">{s.desc}</p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mt-6 relative z-10">
+                {/* Service Tags */}
+                <div className="flex flex-wrap gap-2 relative z-10 pt-2 border-t border-slate-100">
                   {s.tags.map((tag) => (
-                    <span key={tag} className="chip">{tag}</span>
+                    <span key={tag} className="chip text-[10px] py-1 px-2.5">
+                      {tag}
+                    </span>
                   ))}
                 </div>
               </motion.div>
@@ -158,84 +155,74 @@ export default function ServicesOverview() {
           </div>
         </div>
 
-        {/* Bottom line */}
         <div className="section-bottom-line absolute" aria-hidden="true" />
       </section>
 
-      {/* Process Timeline */}
-      <section className="py-28 relative overflow-hidden">
-        {/* Premium alternating background */}
-        <div className="absolute inset-0" aria-hidden="true">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(180deg, #EEF6FF 0%, #F0F4FF 50%, #EEF6FF 100%)",
-            }}
-          />
-          <div className="absolute left-1/4 top-1/3 w-[500px] h-[400px] rounded-full bg-blue-200/30 blur-3xl" />
-          <div className="absolute right-0 bottom-0 w-[400px] h-[350px] rounded-full bg-violet-200/25 blur-3xl" />
-          <div className="absolute inset-0 dot-grid" />
+      {/* Process Timeline Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          {/* Keeping center clean and bright */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-white/70 blur-2xl rounded-full" />
         </div>
 
         <div className="section-top-line absolute" aria-hidden="true" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          
+          {/* Section Header */}
           <motion.div
-            initial={{ opacity: 0, y: 22 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="section-header"
           >
-            <p className="type-eyebrow">Our Process</p>
-            <h2 className="type-h1 mt-2 mb-5">What Happens at Your Pet&apos;s Session</h2>
-            <p className="type-body text-slate-500">A transparent, step-by-step experience — no hidden steps, no surprises.</p>
+            <span className="type-eyebrow">Our Process</span>
+            <h2 className="type-section-heading mt-2.5 mb-4">What Happens at Your Pet&apos;s Session</h2>
+            <p className="type-section-subtitle max-w-xl mx-auto">
+              A gentle, step-by-step custom grooming experience designed to minimize stress.
+            </p>
           </motion.div>
 
-          {/* Steps */}
-          <div className="relative">
-            {/* Connector line */}
-            <div
-              className="hidden lg:block absolute top-10 left-[8.33%] right-[8.33%] h-px"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(96,165,250,0.50) 20%, rgba(99,102,241,0.45) 80%, transparent)" }}
-              aria-hidden="true"
-            />
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-7">
+          {/* Timeline steps */}
+          <div className="relative mt-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
               {process.map((p, i) => (
                 <motion.div
                   key={p.step}
-                  initial={{ opacity: 0, y: 24 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.50, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex flex-col items-center text-center gap-5"
+                  transition={{ duration: 0.5, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -6, scale: 1.02 }}
+                  className="flex flex-col items-center text-center gap-5 p-4 rounded-[24px] hover:bg-white hover:shadow-[0_15px_40px_rgba(0,0,0,0.06)] transition-all duration-300 group"
                 >
+                  {/* Step Bubble Counter */}
                   <motion.div
-                    whileHover={{ scale: 1.12, rotate: 5 }}
-                    className={`w-16 h-16 rounded-[20px] bg-gradient-to-br ${p.color} flex items-center justify-center text-white font-poppins font-extrabold text-xl shadow-xl transition-shadow duration-250`}
-                    style={{ boxShadow: `0 10px 32px ${p.glow}, 0 3px 10px rgba(0,0,0,0.10)` }}
+                    whileHover={{ scale: 1.05 }}
+                    className={`w-16 h-16 rounded-full bg-gradient-to-br ${p.color} flex items-center justify-center text-white font-black text-xl shadow-[0_8px_24px_rgba(0,0,0,0.12)] border border-white/20 transition-transform duration-300 group-hover:shadow-[0_12px_30px_rgba(0,0,0,0.15)]`}
                   >
                     {p.step}
                   </motion.div>
                   <div>
-                    <p className="font-poppins font-bold text-sm text-[#1E3A8A] mb-1.5">{p.title}</p>
-                    <p className="type-small text-[12px]">{p.desc}</p>
+                    <h4 className="font-bold text-zinc-900 text-[15px] mb-2">{p.title}</h4>
+                    <p className="type-small text-[12px] text-zinc-600 leading-relaxed font-inter">{p.desc}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
           </div>
 
+          {/* Booking CTA Button */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-center mt-16"
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-center mt-14"
           >
-            <Link href="/book" className="btn-primary shine">
-              <ArrowRight className="h-4 w-4" />
+            <Link href="/book" className="btn-primary shine type-button">
+              <ArrowRight className="h-4.5 w-4.5" />
               Book Your Session
             </Link>
           </motion.div>

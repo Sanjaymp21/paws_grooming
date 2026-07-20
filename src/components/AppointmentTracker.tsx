@@ -49,19 +49,17 @@ export default function AppointmentTracker() {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-xs font-bold tracking-widest text-sky-500 uppercase font-poppins">
+          <span className="inline-flex items-center gap-2 px-4.5 py-1.5 rounded-full bg-yellow-50 border border-yellow-100 text-zinc-900 text-[11px] font-bold font-poppins tracking-wide shadow-sm mb-1 uppercase">
             Live Tracker
-          </h2>
-          <h3 className="text-3xl sm:text-4xl font-poppins font-extrabold text-navy-blue tracking-tight">
-            Live Appointment &amp; Care Tracker
-          </h3>
-          <p className="text-md text-slate-gray font-inter leading-relaxed">
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-poppins font-black text-zinc-900 tracking-tight">Live Appointment &amp; Care Tracker</h2>
+          <p className="text-slate-500 text-sm font-inter leading-relaxed max-w-2xl mx-auto">
             Curious about what happens while your pet is with us? Follow their journey from greeting to pickup in real-time. Use the simulator below to test the tracking dashboard!
           </p>
         </div>
 
         {/* Tracker Panel */}
-        <div className="max-w-4xl mx-auto glass-card rounded-[32px] p-6 sm:p-8 border border-sky-100/80 shadow-md">
+        <div className="max-w-4xl mx-auto glass-card rounded-[32px] p-6 sm:p-8 border border-yellow-100 shadow-md bg-white">
           
           {/* Controls Bar */}
           <div className="flex flex-wrap justify-between items-center gap-4 mb-10 pb-6 border-b border-slate-100">
@@ -71,10 +69,10 @@ export default function AppointmentTracker() {
                   isSimulating ? "bg-emerald-400" : "bg-sky-400"
                 }`}></span>
                 <span className={`relative inline-flex rounded-full h-3 w-3 ${
-                  isSimulating ? "bg-emerald-500" : "bg-sky-500"
+                  isSimulating ? "bg-emerald-500" : "bg-yellow-400"
                 }`}></span>
               </span>
-              <span className="font-poppins font-bold text-xs text-navy-blue uppercase">
+              <span className="font-poppins font-bold text-xs text-zinc-900 uppercase">
                 {isSimulating ? "Live Simulation Running" : "Simulator Ready"}
               </span>
             </div>
@@ -83,7 +81,7 @@ export default function AppointmentTracker() {
               {isSimulating ? (
                 <button
                   onClick={handleStopSimulation}
-                  className="px-4 py-2 rounded-xl bg-rose-500 text-white font-poppins text-xs font-bold shadow hover:bg-rose-600 transition-all flex items-center gap-1.5"
+                  className="px-4.5 py-2.5 rounded-2xl bg-rose-500 text-white font-poppins text-xs font-bold shadow hover:bg-rose-600 transition-all flex items-center gap-1.5 active:scale-[0.98]"
                 >
                   <Square className="h-3.5 w-3.5 fill-white" />
                   Stop Simulator
@@ -91,7 +89,7 @@ export default function AppointmentTracker() {
               ) : (
                 <button
                   onClick={handleStartSimulation}
-                  className="px-4 py-2 rounded-xl bg-navy-blue text-white font-poppins text-xs font-bold shadow hover:bg-sky-500 transition-all flex items-center gap-1.5"
+                  className="px-4.5 py-2.5 rounded-2xl bg-zinc-900 text-white font-poppins text-xs font-bold shadow-md hover:bg-yellow-400 transition-all flex items-center gap-1.5 active:scale-[0.98]"
                 >
                   <Play className="h-3.5 w-3.5 fill-white" />
                   Simulate Live Session
@@ -100,7 +98,7 @@ export default function AppointmentTracker() {
               <button
                 onClick={() => setCurrentStep(0)}
                 disabled={isSimulating}
-                className="px-4 py-2 rounded-xl border border-sky-100 text-navy-blue font-poppins text-xs font-bold hover:bg-sky-50 transition-all disabled:opacity-40 disabled:hover:bg-transparent"
+                className="px-4.5 py-2.5 rounded-2xl border border-slate-200 text-zinc-900 font-poppins text-xs font-bold hover:bg-slate-50 transition-all disabled:opacity-40 disabled:hover:bg-transparent"
               >
                 Reset
               </button>
@@ -112,7 +110,7 @@ export default function AppointmentTracker() {
             {/* Desktop Horizontal Line */}
             <div className="hidden lg:block absolute top-[22px] left-[6%] right-[6%] h-[3px] bg-slate-100 -z-10">
               <motion.div
-                className="h-full bg-gradient-to-r from-sky-400 to-navy-blue origin-left"
+                className="h-full bg-gradient-to-r from-yellow-400 to-navy-blue origin-left"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: currentStep / (steps.length - 1) }}
                 transition={{ duration: 0.5 }}
@@ -142,9 +140,9 @@ export default function AppointmentTracker() {
                     <div
                       className={`h-11 w-11 rounded-full flex items-center justify-center shrink-0 border-2 font-poppins text-xs font-bold transition-all duration-500 z-10 ${
                         isCompleted
-                          ? "bg-sky-500 border-sky-400 text-white shadow-md shadow-sky-100"
+                          ? "bg-emerald-500 border-emerald-400 text-white shadow-md shadow-emerald-100"
                           : isActive
-                          ? "bg-navy-blue border-navy-blue text-white ring-4 ring-sky-100 shadow-md animate-pulse"
+                          ? "bg-zinc-900 border-zinc-900 text-white ring-4 ring-sky-100 shadow-md animate-pulse"
                           : "bg-white border-slate-200 text-slate-400"
                       }`}
                     >
@@ -160,11 +158,11 @@ export default function AppointmentTracker() {
                     {/* Step Content */}
                     <div>
                       <h4 className={`font-poppins font-bold text-sm leading-tight transition-colors duration-300 ${
-                        isActive ? "text-navy-blue" : isCompleted ? "text-slate-700" : "text-slate-400"
+                        isActive ? "text-zinc-900" : isCompleted ? "text-slate-700" : "text-slate-400"
                       }`}>
                         {step.label}
                       </h4>
-                      <p className="text-[10px] text-slate-gray font-inter leading-relaxed mt-1 max-w-[130px]">
+                      <p className="text-[10px] text-slate-400 font-inter leading-relaxed mt-1 max-w-[130px]">
                         {step.desc}
                       </p>
                     </div>
@@ -176,13 +174,13 @@ export default function AppointmentTracker() {
           </div>
 
           {/* Current Step Status Callout */}
-          <div className="mt-12 p-5 rounded-2xl bg-sky-50 border border-sky-100/50 flex gap-3 items-center">
-            <div className="p-2.5 rounded-xl bg-white text-sky-500 shrink-0 shadow-sm">
-              <Sparkles className="h-5 w-5 animate-spin-slow" />
+          <div className="mt-12 p-5 rounded-2xl bg-yellow-50/50 border border-yellow-100/50 flex gap-3 items-center">
+            <div className="p-2.5 rounded-xl bg-white text-zinc-900 shrink-0 shadow-sm border border-yellow-100/30">
+              <Sparkles className="h-5 w-5 text-zinc-900 animate-pulse" />
             </div>
             <div className="text-xs">
-              <span className="font-poppins font-bold text-navy-blue block">Current Activity:</span>
-              <p className="text-slate-gray font-inter mt-0.5 leading-relaxed">
+              <span className="font-poppins font-bold text-zinc-900 block">Current Activity:</span>
+              <p className="text-slate-500 font-inter mt-0.5 leading-relaxed">
                 {currentStep === steps.length - 1 
                   ? "Your pet has completed all checks! Scent spray applied and is happily awaiting pickup in our climate-controlled lounge."
                   : `Your pet is currently in the [${steps[currentStep].label}] stage. ${steps[currentStep].desc}.`}

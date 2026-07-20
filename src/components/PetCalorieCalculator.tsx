@@ -29,7 +29,7 @@ const activityLevels: ActivityLevel[] = [
     label: "Low Activity",
     factor: 1.4,
     description: "Short daily walks",
-    color: "text-sky-500",
+    color: "text-zinc-900",
   },
   {
     label: "Moderate",
@@ -41,7 +41,7 @@ const activityLevels: ActivityLevel[] = [
     label: "Active",
     factor: 1.8,
     description: "High energy, long runs",
-    color: "text-indigo-500",
+    color: "text-zinc-900",
   },
   {
     label: "Very Active",
@@ -79,10 +79,10 @@ function SelectWrapper({
   label: string;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       <label
         htmlFor={id}
-        className="text-[11px] font-bold font-poppins text-[#1E3A8A] tracking-widest uppercase"
+        className="text-xs font-poppins font-bold text-zinc-900 uppercase tracking-wider"
       >
         {label}
       </label>
@@ -91,12 +91,11 @@ function SelectWrapper({
           id={id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full appearance-none bg-white/80 border border-sky-200/60 rounded-2xl px-4 py-3 pr-10 text-sm font-semibold font-poppins text-[#1E3A8A] focus:outline-none focus:ring-2 focus:ring-sky-400/40 focus:border-sky-400 transition-all duration-200 cursor-pointer shadow-sm"
-          style={{ backdropFilter: "blur(8px)" }}
+          className="w-full appearance-none bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl px-4 py-3.5 pr-10 text-sm font-inter font-semibold text-zinc-900 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 cursor-pointer shadow-sm"
         >
           {children}
         </select>
-        <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-sky-400 pointer-events-none" />
+        <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-900 pointer-events-none" />
       </div>
     </div>
   );
@@ -126,16 +125,14 @@ function ResultCard({
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
-      className="relative group"
+      className="relative group h-full"
     >
       <div
-        className="relative flex flex-col items-center text-center gap-4 p-6 sm:p-8 rounded-[22px] overflow-hidden border border-white/60"
+        className="relative flex flex-col items-center text-center gap-4 p-6 sm:p-8 rounded-[24px] overflow-hidden border border-slate-100 h-full"
         style={{
-          background: "rgba(255,255,255,0.72)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
+          background: "rgba(255, 255, 255, 0.9)",
           boxShadow:
-            "0 4px 32px rgba(30,58,138,0.08), 0 1px 4px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
+            "0 10px 30px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
         }}
       >
         {/* Gradient top stripe */}
@@ -146,7 +143,7 @@ function ResultCard({
 
         {/* Hover glow */}
         <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[22px]"
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[24px]"
           style={{
             background: `radial-gradient(ellipse 70% 60% at 50% 0%, ${glowClass}, transparent)`,
           }}
@@ -162,18 +159,18 @@ function ResultCard({
 
         {/* Value */}
         <div className="relative">
-          <p className="text-4xl sm:text-5xl font-poppins font-extrabold text-[#1E3A8A] tabular-nums leading-none">
+          <p className="text-4xl sm:text-5xl font-poppins font-black text-zinc-900 tabular-nums leading-none">
             {value.toLocaleString()}
           </p>
-          <p className="text-xs font-bold font-poppins text-slate-400 uppercase tracking-widest mt-1">
+          <p className="text-xs font-bold font-poppins text-slate-400 uppercase tracking-widest mt-2">
             {unit}
           </p>
         </div>
 
         {/* Labels */}
         <div className="relative">
-          <p className="font-poppins font-bold text-base text-[#1E3A8A]">{title}</p>
-          <p className="text-[11px] text-slate-500 font-inter leading-snug mt-0.5">{subtitle}</p>
+          <p className="font-poppins font-bold text-base text-zinc-900">{title}</p>
+          <p className="text-[12px] text-slate-500 font-inter leading-relaxed mt-1">{subtitle}</p>
         </div>
       </div>
     </motion.div>
@@ -229,8 +226,8 @@ export default function PetCalorieCalculator() {
       {/* Background decorations */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sky-200 to-transparent" />
-        <div className="absolute right-[-10%] top-[10%] w-[500px] h-[500px] rounded-full bg-sky-100/40 blur-[100px]" />
-        <div className="absolute left-[-5%] bottom-[10%] w-[400px] h-[400px] rounded-full bg-indigo-50/50 blur-[80px]" />
+        <div className="absolute right-[-10%] top-[10%] w-[500px] h-[500px] rounded-full bg-yellow-100/40 blur-[100px]" />
+        <div className="absolute left-[-5%] bottom-[10%] w-[400px] h-[400px] rounded-full bg-yellow-100/50 blur-[80px]" />
         <div className="absolute inset-0 dot-grid" />
       </div>
 
@@ -244,13 +241,13 @@ export default function PetCalorieCalculator() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-12"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50/80 border border-sky-200/60 backdrop-blur-sm text-[#1E3A8A] text-[11px] font-bold font-poppins tracking-wide shadow-sm mb-4">
-            <Calculator className="h-3.5 w-3.5 text-sky-500" aria-hidden="true" />
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-50 border border-yellow-100/80 backdrop-blur-sm text-zinc-900 text-[11px] font-bold font-poppins tracking-wide shadow-sm mb-4">
+            <Calculator className="h-3.5 w-3.5 text-zinc-900" aria-hidden="true" />
             Free Tool
           </span>
-          <h2 className="type-h2 mb-3">Pet Calorie Calculator</h2>
-          <p className="type-small max-w-md mx-auto">
-            Estimate your pet&apos;s daily calorie requirements in seconds.
+          <h2 className="text-3xl sm:text-4xl font-poppins font-extrabold text-zinc-900 tracking-tight mb-3">Pet Calorie Calculator</h2>
+          <p className="text-slate-500 text-sm font-inter max-w-md mx-auto leading-relaxed">
+            Estimate your pet&apos;s daily calorie requirements in seconds using standard veterinary metabolic formulas.
           </p>
         </motion.div>
 
@@ -260,25 +257,25 @@ export default function PetCalorieCalculator() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative rounded-[24px] overflow-hidden"
+          className="relative rounded-[28px] overflow-hidden"
           style={{
-            background: "rgba(255,255,255,0.75)",
-            backdropFilter: "blur(28px)",
-            WebkitBackdropFilter: "blur(28px)",
-            border: "1px solid rgba(255,255,255,0.8)",
+            background: "rgba(255,255,255,0.8)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid rgba(255,255,255,0.7)",
             boxShadow:
-              "0 8px 48px rgba(30,58,138,0.10), 0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.95)",
+              "0 20px 60px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
           }}
         >
           {/* Gradient top border */}
           <div
-            className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600"
+            className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500"
             aria-hidden="true"
           />
 
           <div className="p-7 sm:p-10">
             {/* Form Grid */}
-            <div className="grid sm:grid-cols-3 gap-5 mb-6">
+            <div className="grid sm:grid-cols-3 gap-6 mb-6">
               <SelectWrapper
                 id="calc-pet-type"
                 label="Pet Type"
@@ -289,10 +286,10 @@ export default function PetCalorieCalculator() {
                 <option value="cat">Cat</option>
               </SelectWrapper>
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="calc-weight"
-                  className="text-[11px] font-bold font-poppins text-[#1E3A8A] tracking-widest uppercase"
+                  className="text-xs font-poppins font-bold text-zinc-900 uppercase tracking-wider"
                 >
                   Weight (kg)
                 </label>
@@ -308,8 +305,7 @@ export default function PetCalorieCalculator() {
                     if (error) setError("");
                   }}
                   placeholder={petType === "dog" ? "e.g. 12" : "e.g. 4.5"}
-                  className="w-full bg-white/80 border border-sky-200/60 rounded-2xl px-4 py-3 text-sm font-semibold font-poppins text-[#1E3A8A] placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40 focus:border-sky-400 transition-all duration-200 shadow-sm"
-                  style={{ backdropFilter: "blur(8px)" }}
+                  className="w-full bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl px-4 py-3.5 text-sm font-inter font-semibold text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 shadow-sm"
                   onKeyDown={(e) => e.key === "Enter" && handleCalculate()}
                 />
               </div>
@@ -336,7 +332,7 @@ export default function PetCalorieCalculator() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center gap-2 mb-6 px-4 py-2.5 rounded-xl bg-sky-50/70 border border-sky-100/80"
+                className="flex items-center gap-2 mb-6 px-4 py-2.5 rounded-xl bg-yellow-50/70 border border-yellow-100/80"
               >
                 <Info className="h-3.5 w-3.5 text-sky-400 shrink-0" />
                 <p className="text-[11px] text-slate-500 font-inter">
@@ -344,7 +340,7 @@ export default function PetCalorieCalculator() {
                     {selectedActivity.label}:
                   </span>{" "}
                   {selectedActivity.description} — multiplier{" "}
-                  <span className="font-bold text-[#1E3A8A]">x{selectedActivity.factor}</span>
+                  <span className="font-bold text-[#000000]">x{selectedActivity.factor}</span>
                 </p>
               </motion.div>
             </AnimatePresence>
@@ -407,7 +403,7 @@ export default function PetCalorieCalculator() {
                 className="overflow-hidden"
               >
                 <div
-                  className="border-t border-sky-100/80 px-7 sm:px-10 pt-8 pb-10"
+                  className="border-t border-yellow-100/80 px-7 sm:px-10 pt-8 pb-10"
                   style={{
                     background:
                       "linear-gradient(180deg, rgba(240,249,255,0.6) 0%, rgba(255,255,255,0) 100%)",

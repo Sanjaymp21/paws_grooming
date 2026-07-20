@@ -44,20 +44,18 @@ export default function AIRecommendation() {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-xs font-bold tracking-widest text-sky-500 uppercase font-poppins flex items-center justify-center gap-1.5">
-            <BrainCircuit className="h-4 w-4 text-sky-500 animate-pulse" />
+          <span className="inline-flex items-center gap-2 px-4.5 py-1.5 rounded-full bg-yellow-50 border border-yellow-100 text-zinc-900 text-[11px] font-bold font-poppins tracking-wide shadow-sm mb-1 uppercase">
+            <BrainCircuit className="h-3.5 w-3.5 text-zinc-900" />
             AI Recommendation
-          </h2>
-          <h3 className="text-3xl sm:text-4xl font-poppins font-extrabold text-navy-blue tracking-tight">
-            Personalized AI Grooming Wizard
-          </h3>
-          <p className="text-md text-slate-gray font-inter leading-relaxed">
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-poppins font-black text-zinc-900 tracking-tight">Personalized AI Grooming Wizard</h2>
+          <p className="text-slate-500 text-sm font-inter leading-relaxed max-w-xl mx-auto">
             Enter your pet&apos;s physical characteristics, and our smart recommendation engine will compute the ideal grooming session matching their specific coat and age needs.
           </p>
         </div>
 
         {/* Wizard Card Container */}
-        <div className="max-w-3xl mx-auto glass-card rounded-[32px] p-6 sm:p-8 border border-sky-100/80 shadow-lg relative overflow-hidden">
+        <div className="max-w-3xl mx-auto glass-card rounded-[32px] p-6 sm:p-8 border border-yellow-100/80 shadow-lg relative overflow-hidden bg-white">
           {/* Background element */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-sky-200/10 rounded-full blur-2xl" />
 
@@ -74,20 +72,20 @@ export default function AIRecommendation() {
                 <div className="grid sm:grid-cols-2 gap-6">
                   {/* Breed */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-poppins font-bold text-navy-blue uppercase">Pet Breed</label>
+                    <label className="text-xs font-poppins font-bold text-zinc-900 uppercase tracking-wider">Pet Breed</label>
                     <input
                       type="text"
                       placeholder="e.g. Golden Retriever, Persian Cat"
                       value={breed}
                       onChange={(e) => setBreed(e.target.value)}
-                      className="px-4 py-3 rounded-xl border border-slate-100 focus:outline-none focus:border-sky-300 font-inter text-sm shadow-sm bg-white"
+                      className="px-4 py-3.5 rounded-2xl border border-slate-200 focus:border-zinc-900 font-inter font-semibold text-sm shadow-sm bg-white text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200"
                       required
                     />
                   </div>
 
                   {/* Age */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-poppins font-bold text-navy-blue uppercase">Age (Years)</label>
+                    <label className="text-xs font-poppins font-bold text-zinc-900 uppercase tracking-wider">Age (Years)</label>
                     <input
                       type="number"
                       min="0.1"
@@ -96,7 +94,7 @@ export default function AIRecommendation() {
                       placeholder="e.g. 2"
                       value={age}
                       onChange={(e) => setAge(e.target.value)}
-                      className="px-4 py-3 rounded-xl border border-slate-100 focus:outline-none focus:border-sky-300 font-inter text-sm shadow-sm bg-white"
+                      className="px-4 py-3.5 rounded-2xl border border-slate-200 focus:border-zinc-900 font-inter font-semibold text-sm shadow-sm bg-white text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200"
                       required
                     />
                   </div>
@@ -105,17 +103,17 @@ export default function AIRecommendation() {
                 <div className="grid sm:grid-cols-2 gap-6">
                   {/* Coat Length */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-poppins font-bold text-navy-blue uppercase">Coat Length</label>
+                    <label className="text-xs font-poppins font-bold text-zinc-900 uppercase tracking-wider">Coat Length</label>
                     <div className="grid grid-cols-3 gap-2">
                       {(["short", "medium", "long"] as const).map((len) => (
                         <button
                           key={len}
                           type="button"
                           onClick={() => setCoatLength(len)}
-                          className={`py-2.5 rounded-xl text-xs font-poppins font-bold uppercase transition-all ${
+                          className={`py-3 rounded-2xl text-xs font-poppins font-bold uppercase transition-all duration-300 border ${
                             coatLength === len
-                              ? "bg-navy-blue text-white shadow-sm"
-                              : "bg-slate-50 text-slate-gray hover:bg-slate-100 border border-slate-100"
+                              ? "bg-gradient-to-r from-zinc-900 to-zinc-800 text-white border-2 border-zinc-900 shadow-[0_10px_25px_rgba(0,0,0,0.15)] scale-[1.03]"
+                              : "bg-yellow-50/50 border-[#D1D5DB] text-[#334155] hover:bg-yellow-100/50 hover:border-zinc-900 hover:text-zinc-900"
                           }`}
                         >
                           {len}
@@ -126,17 +124,17 @@ export default function AIRecommendation() {
 
                   {/* Shedding Level */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-poppins font-bold text-navy-blue uppercase">Shedding Level</label>
+                    <label className="text-xs font-poppins font-bold text-zinc-900 uppercase tracking-wider">Shedding Level</label>
                     <div className="grid grid-cols-3 gap-2">
                       {(["low", "moderate", "heavy"] as const).map((level) => (
                         <button
                           key={level}
                           type="button"
                           onClick={() => setShedding(level)}
-                          className={`py-2.5 rounded-xl text-xs font-poppins font-bold uppercase transition-all ${
+                          className={`py-3 rounded-2xl text-xs font-poppins font-bold uppercase transition-all duration-300 border ${
                             shedding === level
-                              ? "bg-navy-blue text-white shadow-sm"
-                              : "bg-slate-50 text-slate-gray hover:bg-slate-100 border border-slate-100"
+                              ? "bg-gradient-to-r from-zinc-900 to-zinc-800 text-white border-2 border-zinc-900 shadow-[0_10px_25px_rgba(0,0,0,0.15)] scale-[1.03]"
+                              : "bg-yellow-50/50 border-[#D1D5DB] text-[#334155] hover:bg-yellow-100/50 hover:border-zinc-900 hover:text-zinc-900"
                           }`}
                         >
                           {level}
@@ -150,7 +148,7 @@ export default function AIRecommendation() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-navy-blue to-sky-500 text-white font-poppins font-bold shadow-md hover:shadow-lg hover:shadow-sky-100 active:scale-[0.99] transition-all duration-300 disabled:opacity-80"
+                    className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 text-white font-poppins font-bold shadow-md hover:shadow-lg hover:shadow-yellow-100 active:scale-[0.99] transition-all duration-300 disabled:opacity-80"
                   >
                     {loading ? (
                       <>
@@ -177,41 +175,41 @@ export default function AIRecommendation() {
                 {/* Result Header */}
                 <div className="flex justify-between items-start border-b border-slate-100 pb-4">
                   <div>
-                    <span className="text-[10px] text-sky-500 font-bold uppercase tracking-wider font-poppins">Recommended Service</span>
-                    <h4 className="text-2xl font-poppins font-black text-navy-blue">{result.packageName}</h4>
+                    <span className="text-[10px] text-zinc-900 font-bold uppercase tracking-wider font-poppins">Recommended Service</span>
+                    <h4 className="text-2xl font-poppins font-black text-zinc-900">{result.packageName}</h4>
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] text-slate-gray font-poppins font-semibold uppercase tracking-wider block">Estimated Price</span>
-                    <span className="text-xl font-poppins font-extrabold text-navy-blue">₹{result.price}</span>
+                    <span className="text-xl font-poppins font-extrabold text-zinc-900">₹{result.price}</span>
                   </div>
                 </div>
 
                 {/* Result Detail Fields */}
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl bg-sky-50 border border-sky-100/50 flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-lg bg-white flex items-center justify-center text-sky-500">
+                  <div className="p-4 rounded-2xl bg-yellow-50 border border-yellow-100/50 flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-white flex items-center justify-center text-zinc-900">
                       <Clock className="h-4.5 w-4.5" />
                     </div>
                     <div>
                       <span className="text-[10px] text-slate-gray font-poppins font-semibold block leading-none">Estimated Duration</span>
-                      <span className="text-sm font-poppins font-bold text-navy-blue mt-0.5 block">{result.estimatedTime}</span>
+                      <span className="text-sm font-poppins font-bold text-zinc-900 mt-0.5 block">{result.estimatedTime}</span>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100/50 flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-lg bg-white flex items-center justify-center text-indigo-500">
+                  <div className="p-4 rounded-2xl bg-yellow-100/50 border border-yellow-200/50 flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-white flex items-center justify-center text-zinc-900">
                       <Tag className="h-4.5 w-4.5" />
                     </div>
                     <div>
                       <span className="text-[10px] text-slate-gray font-poppins font-semibold block leading-none">Best Match Code</span>
-                      <span className="text-sm font-poppins font-bold text-navy-blue mt-0.5 block">SST-AI-{(result.packageName.split(" ")[0]).toUpperCase()}</span>
+                      <span className="text-sm font-poppins font-bold text-zinc-900 mt-0.5 block">SST-AI-{(result.packageName.split(" ")[0]).toUpperCase()}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Explanations & Reason */}
                 <div className="space-y-2">
-                  <span className="text-xs font-poppins font-bold text-navy-blue uppercase">Why this is recommended:</span>
+                  <span className="text-xs font-poppins font-bold text-zinc-900 uppercase">Why this is recommended:</span>
                   <p className="text-xs text-slate-gray font-inter leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
                     {result.reason}
                   </p>
@@ -219,7 +217,7 @@ export default function AIRecommendation() {
 
                 {/* Benefits */}
                 <div className="space-y-2">
-                  <span className="text-xs font-poppins font-bold text-navy-blue uppercase">Key Benefits:</span>
+                  <span className="text-xs font-poppins font-bold text-zinc-900 uppercase">Key Benefits:</span>
                   <ul className="space-y-2">
                     {result.benefits.map((b, idx) => (
                       <li key={idx} className="flex gap-2 items-start text-xs font-medium text-slate-700">
@@ -243,7 +241,7 @@ export default function AIRecommendation() {
                 <div className="flex gap-4">
                   <button
                     onClick={handleReset}
-                    className="flex-1 py-3 rounded-xl border border-sky-100 text-navy-blue font-poppins font-semibold text-xs hover:bg-sky-50 transition-colors"
+                    className="flex-1 py-3 rounded-xl border border-yellow-100 text-zinc-900 font-poppins font-semibold text-xs hover:bg-yellow-50 transition-colors"
                   >
                     Calculate New Pet
                   </button>
@@ -253,7 +251,7 @@ export default function AIRecommendation() {
                       const event = new CustomEvent("select-package", { detail: { packageName: result.packageName } });
                       window.dispatchEvent(event);
                     }}
-                    className="flex-2 text-center py-3 rounded-xl bg-navy-blue text-white font-poppins font-semibold text-xs hover:bg-sky-500 shadow-md transition-all"
+                    className="flex-2 text-center py-3 rounded-xl bg-zinc-900 text-white font-poppins font-semibold text-xs hover:bg-yellow-400 shadow-md transition-all"
                   >
                     Select &amp; Book Package
                   </a>

@@ -8,148 +8,131 @@ import Link from "next/link";
 
 export default function Testimonials() {
   return (
-    <section className="py-28 relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden z-10">
       {/* Rich dark background */}
-      <div className="absolute inset-0" aria-hidden="true">
+      <div className="absolute inset-0 z-0" aria-hidden="true">
         <div
           className="absolute inset-0"
           style={{
-            background:
-              "radial-gradient(ellipse 65% 55% at 20% 20%, rgba(37,99,235,0.32) 0%, transparent 55%), radial-gradient(ellipse 55% 45% at 85% 85%, rgba(99,102,241,0.25) 0%, transparent 55%), radial-gradient(ellipse 80% 70% at 50% 50%, rgba(15,30,80,0.55) 0%, transparent 75%), #06091F",
+            background: "linear-gradient(180deg, #0F172A 0%, #020617 100%)",
           }}
         />
-        {/* Extra depth blobs */}
-        <div className="absolute top-0 right-0 w-[600px] h-[500px] rounded-full bg-blue-900/35 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[450px] rounded-full bg-sky-900/30 blur-3xl" />
-        {/* Dark dot grid */}
-        <div className="absolute inset-0 dot-grid-dark" />
+        {/* Layered purple/pink/blue auroras along the bottom/sides */}
+        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full opacity-20 filter blur-[90px]"
+          style={{ background: "radial-gradient(circle, #000000 0%, transparent 70%)" }}
+        />
+        <div className="absolute top-[10%] right-[-10%] w-[40vw] h-[40vw] rounded-full opacity-15 filter blur-[80px]"
+          style={{ background: "radial-gradient(circle, #FACC15 0%, transparent 70%)" }}
+        />
       </div>
-
-      {/* Top shimmer line */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[1.5px]"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent, rgba(96,165,250,0.55) 25%, rgba(99,102,241,0.50) 75%, transparent)",
-        }}
-        aria-hidden="true"
-      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Header */}
+        {/* Section Header */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          className="text-center max-w-3xl mx-auto mb-16 space-y-4"
         >
           <span
-            className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full mb-5"
+            className="inline-flex items-center gap-2.5 px-4.5 py-1.5 rounded-full mb-2"
             style={{
-              background: "rgba(255,255,255,0.07)",
-              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.1)",
               backdropFilter: "blur(8px)",
             }}
           >
-            <span className="type-eyebrow" style={{ color: "#93C5FD" }}>Testimonials</span>
+            <span className="text-xs font-bold font-poppins text-sky-400 uppercase tracking-widest">Testimonials</span>
           </span>
-          <h2 className="type-h1 mb-5" style={{ color: "#FFFFFF" }}>
-            Loved by Coimbatore&apos;s{" "}
-            <span className="gradient-text-warm">Pet Parents</span>
+          <h2 className="text-3xl sm:text-4xl font-poppins font-black text-white tracking-tight">
+            Loved by Coimbatore&apos;s <span className="text-sky-400">Pet Parents</span>
           </h2>
-          <p className="type-body max-w-xl mx-auto" style={{ color: "rgba(148,163,184,0.90)" }}>
-            Real feedback from our neighbours who trust us with their most beloved companions, session after session.
+          <p className="text-slate-400 text-sm font-inter leading-relaxed max-w-xl mx-auto">
+            Real feedback from our neighbours who trust us with their beloved pets, session after session.
           </p>
         </motion.div>
 
         {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-7 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           {mockReviews.map((review, idx) => (
             <motion.article
               key={review.id}
-              initial={{ opacity: 0, y: 32 }}
+              initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.55, delay: idx * 0.15 }}
-              className="relative flex flex-col rounded-[30px] p-8 card-hover overflow-hidden"
+              transition={{ duration: 0.5, delay: idx * 0.08 }}
+              className="relative flex flex-col rounded-[28px] p-8 overflow-hidden"
               style={{
-                background: "rgba(8,16,52,0.90)",
-                backdropFilter: "blur(32px)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                boxShadow: "0 20px 64px rgba(0,0,0,0.40), 0 4px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05)",
+                background: "rgba(30, 41, 59, 0.6)",
+                backdropFilter: "blur(24px)",
+                WebkitBackdropFilter: "blur(24px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 20px 50px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)",
               }}
               aria-label={`Review by ${review.customerName}`}
             >
-              {/* Gradient stripe at top */}
+              {/* Thin top gradient accent */}
               <div
-                className="absolute top-0 left-0 right-0 h-[2px]"
+                className="absolute top-0 left-0 right-0 h-1"
                 style={{
-                  background: "linear-gradient(90deg, rgba(96,165,250,0.55) 0%, rgba(99,102,241,0.65) 50%, rgba(96,165,250,0.55) 100%)",
+                  background: "linear-gradient(90deg, #000000, #FACC15, #EC4899)",
                 }}
-                aria-hidden="true"
-              />
-
-              {/* Inner glow on hover */}
-              <div
-                className="absolute inset-0 rounded-[30px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                style={{ background: "radial-gradient(ellipse 60% 60% at 25% 25%, rgba(37,99,235,0.12), transparent)" }}
                 aria-hidden="true"
               />
 
               {/* Large quote watermark */}
               <Quote
-                className="absolute right-6 top-6 h-16 w-16 rotate-180"
-                style={{ color: "rgba(255,255,255,0.04)" }}
+                className="absolute right-6 top-6 h-12 w-12 rotate-180 opacity-[0.03] text-white"
                 aria-hidden="true"
               />
 
-              {/* Stars */}
-              <div className="flex gap-1 mb-6" role="img" aria-label={`${review.rating} out of 5 stars`}>
+              {/* Star icons */}
+              <div className="flex gap-1 mb-5" role="img" aria-label={`${review.rating} out of 5 stars`}>
                 {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden="true" />
+                  <Star key={i} className="h-4.5 w-4.5 fill-amber-400 text-amber-400" aria-hidden="true" />
                 ))}
               </div>
 
-              {/* Review text */}
-              <blockquote className="flex-1 mb-7">
-                <p className="text-[15px] font-inter leading-relaxed italic" style={{ color: "rgba(203,213,225,0.90)" }}>
+              {/* Review Text quote (Body Text: 18px Inter) */}
+              <blockquote className="flex-1 mb-6">
+                <p className="text-slate-200 font-inter text-sm leading-relaxed">
                   &ldquo;{review.text}&rdquo;
                 </p>
               </blockquote>
 
-              {/* Author */}
+              {/* Card Footer Author Profile */}
               <div
-                className="flex items-center justify-between pt-5"
-                style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+                className="flex items-center justify-between pt-5 border-t border-slate-700/60"
               >
-                <div className="flex items-center gap-3.5">
+                <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={review.avatar}
                     alt={review.customerName}
-                    className="h-11 w-11 rounded-full object-cover"
-                    style={{ border: "2px solid rgba(96,165,250,0.35)", boxShadow: "0 0 12px rgba(96,165,250,0.20)" }}
+                    className="h-10 w-10 rounded-full object-cover border-2 border-sky-400/20"
                     loading="lazy"
                   />
                   <div>
-                    <p className="font-poppins font-bold text-[14px] text-white leading-none mb-0.5">{review.customerName}</p>
-                    <p className="text-[11px] font-inter" style={{ color: "rgba(148,163,184,0.75)" }}>{review.date}</p>
+                    <h4 className="font-poppins font-bold text-white text-xs leading-tight mb-0.5">{review.customerName}</h4>
+                    <p className="text-[10px] text-slate-400 font-inter">{review.date}</p>
                   </div>
                 </div>
+                
+                {/* Pet chip badge */}
                 <div
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
-                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.09)" }}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/80 border border-slate-700/60"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={review.petPic}
                     alt={review.petName}
-                    className="h-6 w-6 rounded-full object-cover"
+                    className="h-5 w-5 rounded-full object-cover"
                     loading="lazy"
                   />
-                  <span className="text-[11px] font-poppins font-semibold" style={{ color: "rgba(148,163,184,0.85)" }}>
+                  <span className="text-[10px] font-bold font-poppins text-slate-400">
                     {review.petName.split(" ")[0]}
                   </span>
                 </div>
@@ -158,19 +141,19 @@ export default function Testimonials() {
           ))}
         </div>
 
-        {/* Bottom trust bar */}
+        {/* Bottom Trust Metrics Panel */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-10"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-5"
         >
           <div
-            className="flex items-center gap-3 px-5 py-3 rounded-2xl"
+            className="flex items-center gap-3 px-5 py-2.5 rounded-2xl"
             style={{
               background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.10)",
+              border: "1px solid rgba(255,255,255,0.08)",
               backdropFilter: "blur(8px)",
             }}
           >
@@ -179,15 +162,14 @@ export default function Testimonials() {
                 <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden="true" />
               ))}
             </div>
-            <span className="text-white font-bold font-poppins text-sm">4.9 / 5</span>
-            <span className="text-[13px] font-inter" style={{ color: "rgba(148,163,184,0.80)" }}>on Google</span>
+            <span className="text-white font-extrabold text-sm">4.9 / 5</span>
+            <span className="text-xs text-slate-400">on Google Reviews</span>
           </div>
-          <div className="hidden sm:block w-px h-5 bg-white/12" aria-hidden="true" />
-          <span className="text-[13px] font-inter" style={{ color: "rgba(148,163,184,0.75)" }}>230+ verified local ratings</span>
-          <div className="hidden sm:block w-px h-5 bg-white/12" aria-hidden="true" />
+          <span className="text-xs text-slate-500">230+ verified local ratings</span>
+          <span className="hidden sm:inline text-slate-800">|</span>
           <Link
             href="/reviews"
-            className="text-sky-400 text-[13px] font-bold font-poppins hover:text-sky-300 transition-colors underline-offset-2 hover:underline"
+            className="text-sky-400 text-xs font-bold hover:text-yellow-100 transition-colors font-poppins"
           >
             Read All Reviews →
           </Link>

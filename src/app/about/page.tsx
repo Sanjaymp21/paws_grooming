@@ -19,7 +19,7 @@ export default function AboutPage() {
         subtitle="We are a passionate team of certified pet groomers in the heart of Coimbatore, dedicated to making every grooming session a calm, safe, and joyful experience."
       />
       <AboutStory />
-      <section className="py-20 bg-sky-50/40 border-t border-sky-100/50">
+      <section className="py-20 bg-yellow-50/40 border-t border-yellow-100/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 space-y-2">
             <p className="type-eyebrow">Transparency</p>

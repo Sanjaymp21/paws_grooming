@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { safetyChecklist } from "../utils/mockData";
-import { ShieldCheck, Heart, Thermometer, ShieldAlert, Sparkles, CheckCircle } from "lucide-react";
+import { ShieldCheck, Heart, Thermometer, Sparkles, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function SafetyDashboard() {
@@ -22,24 +22,28 @@ export default function SafetyDashboard() {
   const hygienePercentage = Math.round((completedCount / list.length) * 100);
 
   const pillars = [
-    { title: "Pet Safe Products", desc: "100% organic, natural, chemical-free herbal shampoos", icon: Heart, color: "text-rose-500", bg: "bg-rose-50" },
-    { title: "Certified Groomers", desc: "Trained in canine first-aid & low-stress handling", icon: ShieldCheck, color: "text-emerald-500", bg: "bg-emerald-50" },
-    { title: "Sanitized Equipment", desc: "Tubs & scissors sterilized via autoclave after every dog", icon: Sparkles, color: "text-sky-500", bg: "bg-sky-50" },
+    { title: "Pet Safe Products", desc: "100% organic, natural, chemical-free herbal shampoos", icon: Heart, color: "text-pink-600", bg: "bg-pink-50" },
+    { title: "Certified Groomers", desc: "Trained in canine first-aid & low-stress handling", icon: ShieldCheck, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { title: "Sanitized Equipment", desc: "Tubs & scissors sterilized via autoclave after every dog", icon: Sparkles, color: "text-sky-blue", bg: "bg-yellow-50" },
   ];
 
   return (
-    <section id="safety" className="py-24 bg-white relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-0 right-0 w-[600px] h-[500px] rounded-full bg-emerald-50/50 blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-sky-50/40 blur-[100px]" />
+    <section id="safety" className="py-24 relative overflow-hidden z-10">
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        {/* Keeping center clean and bright */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-white/70 blur-2xl rounded-full" />
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
-        <div className="section-header">
-          <p className="type-eyebrow">Strict Standards</p>
-          <h2 className="type-h1 mt-1 mb-4">Our 100% Hygiene &amp; Safety Protocol</h2>
-          <p className="type-body text-slate-500">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <span className="inline-flex items-center gap-2 px-4.5 py-1.5 rounded-full bg-yellow-50 border border-yellow-100 text-zinc-900 text-[11px] font-bold font-poppins tracking-wide shadow-sm uppercase">
+            <ShieldCheck className="h-3.5 w-3.5 text-zinc-900" />
+            Strict Standards
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-poppins font-black text-zinc-900 tracking-tight">Our 100% Hygiene &amp; Safety Protocol</h2>
+          <p className="text-slate-500 text-sm font-inter leading-relaxed max-w-2xl mx-auto">
             At SST Groomers, safety is built into everything we do. We enforce strict medical-grade sanitization protocols to protect your pets from cross-infection.
           </p>
         </div>
@@ -49,16 +53,17 @@ export default function SafetyDashboard() {
 
           {/* Left Column: Safety Checklist */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="glass-card-elevated rounded-[28px] p-6 sm:p-8 border border-sky-100/60 overflow-hidden relative">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-sky-500" aria-hidden="true" />
+            <div className="glass-card rounded-[32px] p-6 sm:p-8 border border-yellow-100 shadow-md overflow-hidden relative">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-zinc-800" aria-hidden="true" />
+              
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h4 className="font-poppins font-bold text-sm text-[#1E3A8A]">Today&apos;s Hygiene Checklist</h4>
-                  <span className="text-[10px] text-slate-400 font-inter">Updated daily by our head safety inspector</span>
+                  <h4 className="font-poppins font-bold text-base text-zinc-900">Today&apos;s Hygiene Checklist</h4>
+                  <span className="text-xs text-slate-400 font-inter">Updated daily by our head safety inspector</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-3xl font-poppins font-black text-emerald-600">{hygienePercentage}%</span>
-                  <span className="text-[9px] text-slate-400 block font-poppins font-bold uppercase tracking-widest mt-0.5">Score</span>
+                  <span className="text-3xl font-poppins font-black text-emerald-500">{hygienePercentage}%</span>
+                  <span className="text-[10px] text-slate-400 block font-bold uppercase tracking-wider mt-1">Score</span>
                 </div>
               </div>
 
@@ -67,32 +72,33 @@ export default function SafetyDashboard() {
                 {list.map((item, idx) => {
                   const isDone = item.status === "Completed";
                   return (
-                    <div
+                    <motion.div
                       key={idx}
                       onClick={() => toggleCheck(idx)}
-                      className={`p-3.5 rounded-2xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${isDone
-                          ? "bg-emerald-50/30 border-emerald-100/50"
-                          : "bg-slate-50/50 border-slate-100 opacity-70"
+                      whileHover={{ scale: 1.005 }}
+                      className={`p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${isDone
+                          ? "bg-emerald-50/20 border-emerald-100/50"
+                          : "bg-slate-50/50 border-slate-100 opacity-80"
                         }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`h-5 w-5 rounded-md flex items-center justify-center border transition-colors ${isDone ? "bg-emerald-500 border-emerald-400 text-white" : "border-slate-300 bg-white"
+                        <div className={`h-5.5 w-5.5 rounded-lg flex items-center justify-center border transition-all ${isDone ? "bg-emerald-500 border-emerald-400 text-white shadow-sm" : "border-slate-300 bg-white"
                           }`}>
-                          {isDone && <CheckCircle className="h-4 w-4" />}
+                          {isDone && <CheckCircle className="h-4.5 w-4.5" />}
                         </div>
-                        <span className={`text-xs font-medium font-inter transition-all ${isDone ? "text-slate-800 line-through" : "text-slate-700"
+                        <span className={`text-sm font-inter font-semibold transition-all ${isDone ? "text-slate-400 line-through" : "text-zinc-900"
                           }`}>
                           {item.item}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-mono text-slate-400">{item.time}</span>
-                        <span className={`text-[9px] font-bold font-poppins px-2 py-0.5 rounded-full ${isDone ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-slate-400 font-inter">{item.time}</span>
+                        <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${isDone ? "bg-emerald-100 border-emerald-200 text-emerald-700" : "bg-amber-100 border-amber-200 text-amber-700"
                           }`}>
                           {item.status}
                         </span>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -103,22 +109,22 @@ export default function SafetyDashboard() {
           <div className="lg:col-span-5 space-y-6 flex flex-col justify-between">
 
             {/* Environmental Thermometer widget */}
-            <div className="p-6 rounded-[28px] glass-card border border-sky-100/80 shadow-md">
-              <h5 className="font-poppins font-bold text-sm text-navy-blue mb-4 flex items-center gap-1.5">
-                <Thermometer className="h-5 w-5 text-sky-500" />
+            <div className="p-6 sm:p-8 rounded-[32px] glass-card border border-yellow-100 shadow-md flex-grow">
+              <h5 className="font-poppins font-bold text-base text-zinc-900 mb-6 flex items-center gap-2">
+                <Thermometer className="h-5 w-5 text-zinc-900" />
                 Salon Environmental Control
               </h5>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl bg-sky-50 border border-sky-100/50">
-                  <span className="text-[9px] text-slate-gray font-poppins font-bold uppercase tracking-wider block">Grooming Bay</span>
-                  <span className="text-xl font-poppins font-extrabold text-navy-blue block mt-1">24.2 °C</span>
-                  <span className="text-[9px] text-emerald-600 font-semibold font-inter mt-1 block">✓ Optimal Climate</span>
+                <div className="p-4 sm:p-5 rounded-2xl bg-yellow-50/40 border border-yellow-100/50">
+                  <span className="text-[10px] text-slate-400 font-poppins font-bold uppercase tracking-wider block">Grooming Bay</span>
+                  <span className="text-2xl font-poppins font-black text-zinc-900 block mt-1.5">24.2 °C</span>
+                  <span className="text-[11px] text-emerald-600 font-semibold font-inter mt-1.5 block">✓ Optimal Climate</span>
                 </div>
-                <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100/50">
-                  <span className="text-[9px] text-slate-gray font-poppins font-bold uppercase tracking-wider block">Relaxation Bay</span>
-                  <span className="text-xl font-poppins font-extrabold text-navy-blue block mt-1">23.8 °C</span>
-                  <span className="text-[9px] text-emerald-600 font-semibold font-inter mt-1 block">✓ Safe Humidity (52%)</span>
+                <div className="p-4 sm:p-5 rounded-2xl bg-yellow-100/30 border border-yellow-200/30">
+                  <span className="text-[10px] text-slate-400 font-poppins font-bold uppercase tracking-wider block">Relaxation Bay</span>
+                  <span className="text-2xl font-poppins font-black text-zinc-900 block mt-1.5">23.8 °C</span>
+                  <span className="text-[11px] text-emerald-600 font-semibold font-inter mt-1.5 block">✓ Safe Humidity (52%)</span>
                 </div>
               </div>
             </div>
@@ -126,13 +132,13 @@ export default function SafetyDashboard() {
             {/* Core Pillars */}
             <div className="space-y-4">
               {pillars.map((pillar, idx) => (
-                <div key={idx} className="flex gap-4 p-4 rounded-2xl glass-card border border-sky-50">
+                <div key={idx} className="flex gap-4 p-5 rounded-[24px] bg-white border border-slate-100">
                   <div className={`p-2.5 rounded-xl ${pillar.bg} ${pillar.color} shrink-0`}>
-                    <pillar.icon className="h-5 w-5" />
+                    <pillar.icon className="h-5.5 w-5.5" />
                   </div>
                   <div>
-                    <h5 className="font-poppins font-bold text-sm text-navy-blue">{pillar.title}</h5>
-                    <p className="text-[11px] text-slate-gray font-inter mt-1 leading-normal">{pillar.desc}</p>
+                    <h5 className="font-poppins font-bold text-sm text-zinc-900">{pillar.title}</h5>
+                    <p className="text-xs text-slate-500 mt-1.5 leading-relaxed font-inter">{pillar.desc}</p>
                   </div>
                 </div>
               ))}

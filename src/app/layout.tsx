@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AIAssistant from "@/components/AIAssistant";
 import PageTransition from "@/components/ui/PageTransition";
+import BackgroundDecorations from "@/components/ui/BackgroundDecorations";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -48,28 +43,33 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${poppins.variable} font-inter min-h-screen flex flex-col text-slate-800 antialiased`}
+        className={`${inter.variable} font-inter min-h-screen flex flex-col text-slate-900 antialiased relative`}
       >
-        {/* Skip to content for screen readers */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-sky-500 focus:text-white focus:rounded-lg focus:font-semibold focus:text-sm"
-        >
-          Skip to main content
-        </a>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {/* Skipping to main content */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-zinc-900 focus:text-white focus:rounded-lg focus:font-semibold focus:text-sm"
+          >
+            Skip to main content
+          </a>
 
-        <Navbar />
+          {/* Global Premium Background Layers */}
+          <BackgroundDecorations />
 
-        <main id="main-content" className="flex-1 flex flex-col pt-16">
-          <PageTransition>
-            {children}
-          </PageTransition>
-        </main>
+          <Navbar />
 
-        <Footer />
-        <AIAssistant />
+          <main id="main-content" className="flex-1 flex flex-col pt-24 relative z-10">
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </main>
+
+          <Footer />
+          <AIAssistant />
+        </ThemeProvider>
       </body>
     </html>
   );

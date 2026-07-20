@@ -8,36 +8,45 @@ import { useRouter } from "next/navigation";
 
 const cardConfig = [
   {
-    gradient: "from-slate-700 to-slate-900",
-    stripe: "from-slate-400 via-slate-500 to-slate-600",
-    glow: "rgba(71,85,105,0.35)",
-    outerGlow: "rgba(71,85,105,0.15)",
-    checkBg: "bg-slate-600/25",
-    checkText: "text-slate-200",
-    tagBg: "bg-slate-700/60",
-    tagText: "text-slate-300",
+    gradient: "from-white to-slate-50",
+    textPrimary: "text-slate-900",
+    textSecondary: "text-slate-500",
+    borderColor: "border-slate-200",
+    shadowColor: "rgba(0,0,0,0.04)",
+    stripe: "from-yellow-400 to-blue-500",
+    checkBg: "bg-yellow-50",
+    checkText: "text-zinc-900",
+    tagBg: "bg-yellow-50",
+    tagText: "text-zinc-900",
+    btnStyle: "bg-slate-900 text-white hover:bg-slate-800",
     label: "Essential",
   },
   {
-    gradient: "from-[#1d4ed8] via-[#1E4FD8] to-[#1E3A8A]",
-    stripe: "from-sky-300 via-blue-400 to-indigo-500",
-    glow: "rgba(29,78,216,0.50)",
-    outerGlow: "rgba(29,78,216,0.22)",
-    checkBg: "bg-sky-400/20",
-    checkText: "text-sky-200",
-    tagBg: "bg-sky-400/20",
+    gradient: "from-blue-600 to-indigo-950",
+    textPrimary: "text-white",
+    textSecondary: "text-slate-300",
+    borderColor: "border-blue-500/20",
+    shadowColor: "rgba(37,99,235,0.15)",
+    stripe: "from-sky-300 via-blue-400 to-indigo-400",
+    checkBg: "bg-yellow-500/20",
+    checkText: "text-yellow-100",
+    tagBg: "bg-yellow-500/25",
     tagText: "text-sky-200",
+    btnStyle: "bg-white text-zinc-900 hover:bg-slate-50",
     label: "Most Popular",
   },
   {
-    gradient: "from-violet-700 via-purple-700 to-indigo-800",
-    stripe: "from-violet-300 via-purple-400 to-indigo-400",
-    glow: "rgba(109,40,217,0.40)",
-    outerGlow: "rgba(109,40,217,0.18)",
-    checkBg: "bg-violet-500/20",
-    checkText: "text-violet-200",
-    tagBg: "bg-violet-500/20",
-    tagText: "text-violet-200",
+    gradient: "from-indigo-900 to-slate-900",
+    textPrimary: "text-white",
+    textSecondary: "text-slate-400",
+    borderColor: "border-indigo-500/20",
+    shadowColor: "rgba(99,102,241,0.12)",
+    stripe: "from-indigo-400 via-purple-400 to-pink-500",
+    checkBg: "bg-yellow-1000/20",
+    checkText: "text-indigo-300",
+    tagBg: "bg-yellow-1000/25",
+    tagText: "text-indigo-200",
+    btnStyle: "bg-white/10 text-white hover:bg-white/20 border border-white/20",
     label: "Premium",
   },
 ];
@@ -55,185 +64,158 @@ export default function Packages() {
   };
 
   return (
-    <section className="py-28 relative overflow-hidden">
-      {/* Premium background */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(145deg, #EEF6FF 0%, #F5F3FF 50%, #EEF2FF 100%)",
-          }}
-        />
-        <div className="absolute top-0 right-0 w-[700px] h-[600px] rounded-full bg-sky-200/35 blur-[140px]" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[500px] rounded-full bg-violet-200/30 blur-[120px]" />
-        <div className="absolute inset-0 dot-grid" />
+    <section className="py-24 relative overflow-hidden">
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        {/* Keeping center clean and bright */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-white/70 blur-2xl rounded-full" />
       </div>
 
       <div className="section-top-line absolute" aria-hidden="true" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="section-header"
         >
-          <p className="type-eyebrow">Pricing Plans</p>
-          <h2 className="type-h1 mt-2 mb-5">Tailored Grooming Packages</h2>
-          <p className="type-body text-slate-500">
-            Choose the perfect care session for your pet. We use 100% natural, hypoallergenic shampoos and sterilize all tools between every treatment.
+          <span className="type-eyebrow">Pricing Plans</span>
+          <h2 className="type-section-heading mt-2.5 mb-4">Tailored Grooming Packages</h2>
+          <p className="type-section-subtitle max-w-xl mx-auto">
+            Find the right level of care for your dog or cat. All options utilize 100% natural, hypoallergenic products.
           </p>
         </motion.div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-7 lg:gap-9 items-stretch">
+        {/* Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 items-stretch">
           {groomingPackages.map((pkg, idx) => {
             const isPopular = pkg.isPopular;
             const cfg = cardConfig[idx];
             return (
               <motion.div
                 key={pkg.id}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.60, delay: idx * 0.13, ease: [0.22, 1, 0.36, 1] }}
-                className={`relative ${isPopular ? "md:-mt-6 md:-mb-6 z-10" : ""}`}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className={`relative ${isPopular ? "md:-mt-4 md:-mb-4 z-10" : ""}`}
               >
-                {/* Popular animated gradient ring */}
+                {/* Popular animated outer border glow */}
                 {isPopular && (
                   <div
-                    className="absolute -inset-[2px] rounded-[36px] z-0"
+                    className="absolute -inset-[2px] rounded-[28px] z-0"
                     style={{
-                      background: `linear-gradient(135deg, #60A5FA, #1E3A8A, #818cf8, #60A5FA)`,
+                      background: "linear-gradient(135deg, #000000, #FACC15, #EC4899, #000000)",
                       backgroundSize: "300% 300%",
-                      animation: "border-spin-slow 5s linear infinite",
-                      opacity: 0.95,
+                      animation: "border-spin-slow 6s linear infinite",
+                      opacity: 0.85,
                     }}
                     aria-hidden="true"
                   />
                 )}
 
-                {/* Card */}
+                {/* Card Container */}
                 <div
-                  className={`relative h-full flex flex-col rounded-[34px] overflow-hidden bg-gradient-to-b ${cfg.gradient} z-10`}
+                  className={`relative h-full flex flex-col rounded-[26px] overflow-hidden bg-gradient-to-b ${cfg.gradient} z-10 border ${cfg.borderColor}`}
                   style={{
-                    boxShadow: isPopular
-                      ? `0 40px 100px ${cfg.glow}, 0 12px 36px rgba(0,0,0,0.20)`
-                      : `0 16px 56px ${cfg.outerGlow}, 0 4px 16px rgba(0,0,0,0.10)`,
+                    boxShadow: `0 20px 50px ${cfg.shadowColor}, inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
                   }}
                 >
                   {/* Shimmer top stripe */}
-                  <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${cfg.stripe}`} aria-hidden="true" />
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${cfg.stripe}`} aria-hidden="true" />
 
-                  {/* Shine overlay */}
-                  <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-                    <div
-                      className="absolute top-0 left-0 right-0 h-1/3"
-                      style={{
-                        background: "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%)",
-                      }}
-                    />
-                  </div>
-
-                  {/* Inner content */}
+                  {/* Inner card padding */}
                   <div className="relative p-8 sm:p-9 flex flex-col h-full">
 
-                    {/* Popular badge */}
+                    {/* Popular banner chip */}
                     {isPopular && (
                       <div
-                        className="absolute top-7 right-7 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full"
+                        className="absolute top-7 right-7 flex items-center gap-1.5 px-3 py-1.5 rounded-full"
                         style={{
-                          background: "rgba(255,255,255,0.16)",
+                          background: "rgba(255,255,255,0.2)",
                           backdropFilter: "blur(8px)",
-                          border: "1px solid rgba(255,255,255,0.22)",
+                          border: "1px solid rgba(255,255,255,0.2)",
                         }}
                       >
-                        <Star className="h-3 w-3 text-amber-300 fill-amber-300" aria-hidden="true" />
-                        <span className="text-[10px] font-bold font-poppins text-white uppercase tracking-wider">Most Popular</span>
+                        <Star className="h-3.5 w-3.5 text-amber-300 fill-amber-300" aria-hidden="true" />
+                        <span className="text-[10px] font-bold text-white uppercase tracking-wider">Popular Choice</span>
                       </div>
                     )}
 
-                    {/* Label chip */}
-                    <div className="mb-5">
+                    {/* Service Level label */}
+                    <div className="mb-4.5">
                       <span
-                        className="text-[10px] font-bold font-poppins uppercase tracking-[0.15em] px-3 py-1 rounded-full"
-                        style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.70)" }}
+                        className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-slate-100 text-slate-600"
+                        style={isPopular ? { background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.8)" } : {}}
                       >
                         {cfg.label}
                       </span>
                     </div>
 
-                    {/* Header */}
-                    <div className="mb-7">
-                      <h3 className="font-poppins font-bold text-[22px] text-white mb-2">{pkg.name}</h3>
-                      <p className="text-[13px] font-inter leading-relaxed" style={{ color: "rgba(255,255,255,0.60)" }}>
+                    {/* Card Title & Recommended target info */}
+                    <div className="mb-6">
+                      <h3 className={`type-card-title font-extrabold mb-1.5 ${cfg.textPrimary}`}>
+                        {pkg.name}
+                      </h3>
+                      <p className={`type-small text-xs leading-relaxed ${cfg.textSecondary}`}>
                         {pkg.recommendedFor}
                       </p>
                     </div>
 
-                    {/* Price */}
-                    <div className="mb-6 flex items-end gap-1.5">
-                      <span className="text-[3rem] font-poppins font-extrabold text-white leading-none tabular-nums">
+                    {/* Pricing */}
+                    <div className="mb-5 flex items-end gap-1">
+                      <span className={`text-[3.25rem] font-extrabold leading-none ${cfg.textPrimary}`}>
                         ₹{pkg.price.toLocaleString()}
                       </span>
-                      <span className="text-[13px] mb-2.5 font-inter" style={{ color: "rgba(255,255,255,0.50)" }}>/session</span>
+                      <span className={`text-xs mb-2 font-medium ${cfg.textSecondary}`}>/session</span>
                     </div>
 
-                    {/* Duration chip */}
+                    {/* Duration badge */}
                     <div
-                      className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl ${cfg.tagBg} mb-8 w-fit`}
-                      style={{ border: "1px solid rgba(255,255,255,0.12)" }}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl ${cfg.tagBg} mb-7 w-fit border border-transparent`}
+                      style={isPopular ? { borderColor: "rgba(255,255,255,0.1)" } : { borderColor: "rgba(0,0,0,0.04)" }}
                     >
                       <Clock className={`h-3.5 w-3.5 ${cfg.tagText}`} aria-hidden="true" />
-                      <span className={`text-[12px] font-semibold font-poppins ${cfg.tagText}`}>{pkg.duration}</span>
+                      <span className={`text-xs font-semibold ${cfg.tagText}`}>{pkg.duration}</span>
                     </div>
 
-                    {/* Divider */}
-                    <div className="border-t border-white/10 mb-7" />
+                    {/* Divider line */}
+                    <div className="border-t border-slate-200/60 mb-6" style={isPopular ? { borderColor: "rgba(255,255,255,0.1)" } : {}} />
 
-                    {/* Features */}
-                    <ul className="space-y-4 flex-1 mb-9">
+                    {/* Feature bullet items */}
+                    <ul className="space-y-3.5 flex-grow mb-8">
                       {pkg.features.map((feature, fIdx) => (
                         <motion.li
                           key={fIdx}
                           initial={{ opacity: 0, x: -10 }}
                           whileInView={{ opacity: 1, x: 0 }}
                           viewport={{ once: true }}
-                          transition={{ duration: 0.30, delay: fIdx * 0.06 }}
-                          className="flex items-start gap-3.5"
+                          transition={{ duration: 0.25, delay: fIdx * 0.05 }}
+                          className="flex items-start gap-3"
                         >
-                          <div
-                            className={`mt-0.5 w-5 h-5 rounded-full ${cfg.checkBg} flex items-center justify-center shrink-0`}
-                            style={{ border: "1px solid rgba(255,255,255,0.15)" }}
-                          >
+                          <div className={`mt-0.5 w-5 h-5 rounded-full ${cfg.checkBg} flex items-center justify-center shrink-0`}>
                             <Check className={`h-3 w-3 stroke-[3px] ${cfg.checkText}`} />
                           </div>
-                          <span className="text-[14px] font-inter leading-snug" style={{ color: "rgba(255,255,255,0.82)" }}>
+                          <span className={`type-small text-sm leading-snug ${cfg.textPrimary} opacity-90`}>
                             {feature}
                           </span>
                         </motion.li>
                       ))}
                     </ul>
 
-                    {/* CTA */}
+                    {/* Card Booking CTA button */}
                     <motion.button
-                      whileHover={{ y: -3, scale: 1.02 }}
+                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      transition={{ type: "spring", stiffness: 380, damping: 20 }}
                       onClick={() => handleSelectPackage(pkg.name)}
-                      className={`w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl font-poppins font-bold text-[14px] transition-all duration-200 ${
-                        isPopular
-                          ? "bg-white text-[#1E3A8A] shadow-2xl hover:shadow-[0_8px_40px_rgba(255,255,255,0.35)]"
-                          : "bg-white/14 text-white border border-white/22 hover:bg-white/22"
-                      }`}
-                      style={isPopular ? { boxShadow: "0 8px 32px rgba(255,255,255,0.20)" } : {}}
+                      className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 ${cfg.btnStyle}`}
+                      style={isPopular ? { boxShadow: "0 8px 24px rgba(255,255,255,0.15)" } : {}}
                     >
-                      {isPopular && <Sparkles className="h-4 w-4 text-sky-500" aria-hidden="true" />}
-                      Book Now
-                      {!isPopular && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+                      {isPopular && <Sparkles className="h-4 w-4 text-sky-400" aria-hidden="true" />}
+                      Book Session
                     </motion.button>
 
                   </div>
@@ -243,17 +225,17 @@ export default function Packages() {
           })}
         </div>
 
-        {/* Trust footnote */}
+        {/* Footer trust notice */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-14"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-center mt-12"
         >
-          <p className="text-[13.5px] text-slate-400 font-inter">
-            All sessions include a complimentary wellness assessment. Prices inclusive of all products.{" "}
-            <span className="text-emerald-600 font-semibold">No hidden charges.</span>
+          <p className="type-small text-slate-400 text-sm">
+            Complimentary grooming assessment included with every package.{" "}
+            <span className="text-emerald-500 font-semibold">No hidden fees.</span>
           </p>
         </motion.div>
 

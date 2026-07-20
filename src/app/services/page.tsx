@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
 import ServicesOverview from "@/components/ServicesOverview";
-import BeforeAfter from "@/components/BeforeAfter";
 
 export const metadata: Metadata = {
   title: "Pet Grooming Services",
@@ -18,7 +17,6 @@ export default function ServicesPage() {
         subtitle="Comprehensive dog and cat grooming services using pet-safe, hypoallergenic products — tailored to every breed and coat type."
       />
       <ServicesOverview />
-      <BeforeAfter />
     </>
   );
 }

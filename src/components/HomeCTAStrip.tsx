@@ -12,10 +12,10 @@ const tiles = [
     title: "Grooming Packages",
     desc: "Basic, Premium & Luxury Spa — carefully tailored to your pet's unique coat type and temperament.",
     href: "/packages",
-    gradient: "from-sky-500 via-blue-500 to-indigo-600",
-    glowColor: "rgba(99,102,241,0.20)",
-    glowBorder: "rgba(99,102,241,0.18)",
-    accent: "#3b82f6",
+    gradient: "from-sky-blue to-royal-blue",
+    glowColor: "rgba(37,99,235,0.06)",
+    glowBorder: "rgba(37,99,235,0.12)",
+    accent: "#000000",
     tag: "Starting ₹799",
   },
   {
@@ -24,10 +24,10 @@ const tiles = [
     title: "Why Coimbatore Loves Us",
     desc: "230+ verified reviews from local pet parents who bring their beloved pets back session after session.",
     href: "/reviews",
-    gradient: "from-amber-400 via-orange-500 to-rose-500",
-    glowColor: "rgba(251,146,60,0.20)",
-    glowBorder: "rgba(251,146,60,0.18)",
-    accent: "#F59E0B",
+    gradient: "from-pink-custom to-coral-custom",
+    glowColor: "rgba(236,72,153,0.06)",
+    glowBorder: "rgba(236,72,153,0.12)",
+    accent: "#EC4899",
     tag: "230+ Reviews",
   },
   {
@@ -36,10 +36,10 @@ const tiles = [
     title: "Book a Session Today",
     desc: "Reserve your preferred slot in seconds. Flexible timings, instant SMS confirmation, easy rescheduling.",
     href: "/book",
-    gradient: "from-emerald-400 via-teal-500 to-cyan-600",
-    glowColor: "rgba(20,184,166,0.20)",
-    glowBorder: "rgba(20,184,166,0.18)",
-    accent: "#10B981",
+    gradient: "from-mint-green to-indigo-custom",
+    glowColor: "rgba(52,211,153,0.06)",
+    glowBorder: "rgba(52,211,153,0.12)",
+    accent: "#34D399",
     tag: "Mon–Sun Open",
   },
 ];
@@ -48,28 +48,18 @@ export default function HomeCTAStrip() {
   return (
     <section
       aria-label="Quick navigation"
-      className="py-28 relative overflow-hidden"
+      className="py-24 relative overflow-hidden"
     >
-      {/* Premium background */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(165deg, #F8FBFF 0%, #EEF6FF 40%, #F5F3FF 70%, #F0F9FF 100%)",
-          }}
-        />
-        <div className="absolute right-0 top-0 w-[600px] h-[500px] rounded-full bg-sky-200/35 blur-3xl" />
-        <div className="absolute left-0 bottom-0 w-[500px] h-[450px] rounded-full bg-indigo-200/30 blur-3xl" />
-        <div className="absolute center-0 top-1/2 w-[400px] h-[400px] rounded-full bg-blue-100/25 blur-3xl" />
-        {/* Dot grid */}
-        <div className="absolute inset-0 dot-grid" />
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        {/* Keeping center clean and bright */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] h-[75%] bg-white/70 blur-2xl rounded-full" />
       </div>
 
-      {/* Top line */}
       <div className="section-top-line absolute" aria-hidden="true" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Section label */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -77,65 +67,76 @@ export default function HomeCTAStrip() {
           transition={{ duration: 0.55 }}
           className="section-header"
         >
-          <p className="type-eyebrow">Everything You Need</p>
-          <h2 className="type-h1 mt-2 mb-5">Your Complete Pet Care Hub</h2>
-          <p className="type-body text-slate-500">
-            Packages, reviews, and appointment booking — all designed around your pet&apos;s comfort.
+          <span className="type-eyebrow">Explore SST Groomers</span>
+          <h2 className="type-section-heading mt-2.5 mb-4">Your Complete Pet Care Hub</h2>
+          <p className="type-section-subtitle max-w-xl mx-auto">
+            Review packages, check rating metrics, and book your custom slots in minutes.
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-3 gap-7">
+        {/* Tiles Grid */}
+        <div className="grid md:grid-cols-3 gap-8">
           {tiles.map((tile, i) => (
             <motion.div
               key={tile.href}
-              initial={{ opacity: 0, y: 32 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.55, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="h-full"
             >
               <Link
                 href={tile.href}
-                className="group relative flex flex-col gap-6 p-8 rounded-[28px] card-hover overflow-hidden h-full"
+                className="group relative flex flex-col gap-6 p-8 rounded-[24px] glass-card card-hover overflow-hidden h-full text-slate-800"
                 style={{
-                  background: "rgba(255,255,255,0.88)",
-                  backdropFilter: "blur(28px)",
                   border: `1px solid ${tile.glowBorder}`,
-                  boxShadow: `0 8px 40px ${tile.glowColor}, 0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.95)`,
+                  boxShadow: `0 15px 45px ${tile.glowColor}, inset 0 1px 0 rgba(255,255,255,0.7)`,
+                  textDecoration: "none",
                 }}
               >
-                {/* Gradient top stripe */}
-                <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${tile.gradient} opacity-90`} aria-hidden="true" />
+                {/* Thin top gradient indicator */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tile.gradient}`} aria-hidden="true" />
 
-                {/* Glow background on hover */}
+                {/* Ambient glow highlight on hover */}
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{ background: `radial-gradient(ellipse 70% 70% at 25% 25%, ${tile.glowColor}, transparent)` }}
+                  style={{ background: `radial-gradient(circle at 10% 10%, ${tile.glowColor}, transparent 80%)` }}
                   aria-hidden="true"
                 />
 
-                {/* Icon */}
+                {/* Icon wrapper */}
                 <div
-                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${tile.gradient} flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-250`}
-                  style={{ boxShadow: `0 8px 28px ${tile.glowColor}` }}
+                  className={`w-13 h-13 rounded-2xl bg-gradient-to-br ${tile.gradient} flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300`}
+                  style={{ width: "3.25rem", height: "3.25rem" }}
                 >
                   <tile.icon className="h-6 w-6" />
                 </div>
 
-                <div className="flex-1 relative z-10">
-                  <p className="type-eyebrow mb-1.5" style={{ color: tile.accent }}>{tile.eyebrow}</p>
-                  <h3 className="type-h3 mb-3 group-hover:text-[#1d4ed8] transition-colors duration-200">{tile.title}</h3>
-                  <p className="type-small">{tile.desc}</p>
+                {/* Header text */}
+                <div className="flex-grow space-y-2">
+                  <span className="type-eyebrow text-xs block" style={{ color: tile.accent }}>
+                    {tile.eyebrow}
+                  </span>
+                  <h3 className="type-card-title text-slate-900 group-hover:text-zinc-900 transition-colors duration-200">
+                    {tile.title}
+                  </h3>
+                  <p className="type-small text-slate-500 text-sm leading-relaxed">
+                    {tile.desc}
+                  </p>
                 </div>
 
-                {/* Footer row */}
-                <div className="flex items-center justify-between relative z-10">
-                  <span className="chip text-[10px]">
-                    <Sparkles className="h-2.5 w-2.5" />
+                {/* Footer details inside card */}
+                <div className="flex items-center justify-between pt-2">
+                  <span className="chip font-semibold text-[11px]">
+                    <Sparkles className="h-3 w-3 shrink-0" />
                     {tile.tag}
                   </span>
-                  <span className="flex items-center gap-1 text-[12px] font-bold font-poppins group-hover:gap-2 transition-all duration-150" style={{ color: tile.accent }}>
+                  <span
+                    className="flex items-center gap-1 text-[13px] font-bold group-hover:gap-2 transition-all duration-200"
+                    style={{ color: tile.accent }}
+                  >
                     Explore
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <ArrowRight className="h-4 w-4" />
                   </span>
                 </div>
               </Link>
@@ -144,7 +145,6 @@ export default function HomeCTAStrip() {
         </div>
       </div>
 
-      {/* Bottom separator */}
       <div className="section-bottom-line absolute" aria-hidden="true" />
     </section>
   );

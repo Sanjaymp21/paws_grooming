@@ -2,9 +2,8 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Users, Star, Award, Heart, CheckCircle2, ShieldAlert, Sparkles, Smile } from "lucide-react";
+import { Users, Star, Award, Heart, CheckCircle2, Sparkles, Smile } from "lucide-react";
 
-// Smooth CountUp Component using requestAnimationFrame
 function CountUp({ to, duration = 1.5, suffix = "", decimals = 0 }: { to: string; duration?: number; suffix?: string; decimals?: number }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -44,17 +43,14 @@ function CountUp({ to, duration = 1.5, suffix = "", decimals = 0 }: { to: string
   );
 }
 
-// Circular Progress Indicator Component
-function ProgressRing({ percentage, label, icon: Icon, color = "stroke-sky-500", textColor = "text-sky-500" }: { percentage: number; label: string; icon: any; color?: string; textColor?: string }) {
+function ProgressRing({ percentage, label, icon: Icon, color = "stroke-sky-500", textColor = "text-zinc-900" }: { percentage: number; label: string; icon: any; color?: string; textColor?: string }) {
   const radius = 36;
   const circumference = 2 * Math.PI * radius;
   
   return (
-    <div className="flex flex-col items-center p-6 rounded-2xl glass-card text-center hover:scale-103 transition-transform duration-300">
+    <div className="flex flex-col items-center p-6 rounded-[20px] glass-card text-center hover:scale-[1.02] transition-transform duration-300 border border-slate-200/50">
       <div className="relative w-24 h-24 mb-4">
-        {/* SVG Circle */}
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-          {/* Background circle */}
           <circle
             cx="50"
             cy="50"
@@ -63,7 +59,6 @@ function ProgressRing({ percentage, label, icon: Icon, color = "stroke-sky-500",
             strokeWidth="8"
             fill="transparent"
           />
-          {/* Animated active circle */}
           <motion.circle
             cx="50"
             cy="50"
@@ -79,13 +74,12 @@ function ProgressRing({ percentage, label, icon: Icon, color = "stroke-sky-500",
             strokeLinecap="round"
           />
         </svg>
-        {/* Center Icon */}
         <div className={`absolute inset-0 flex items-center justify-center ${textColor}`}>
           <Icon className="h-7 w-7" />
         </div>
       </div>
-      <span className="font-poppins font-bold text-xl text-navy-blue">{percentage}%</span>
-      <span className="text-xs font-semibold text-slate-gray font-poppins mt-1">{label}</span>
+      <span className="font-extrabold text-xl text-slate-900">{percentage}%</span>
+      <span className="text-[11px] font-bold text-slate-400 mt-1 uppercase tracking-wider">{label}</span>
     </div>
   );
 }
@@ -102,19 +96,22 @@ export default function TrustDashboard() {
   ];
 
   return (
-    <section id="trust" className="py-24 bg-gradient-to-b from-white to-sky-50/40 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="trust" className="py-24 relative overflow-hidden z-10">
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        {/* Keeping center clean and bright */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-white/70 blur-2xl rounded-full" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-xs font-bold tracking-widest text-sky-500 uppercase font-poppins">
-            SST Trust Center
-          </h2>
-          <p className="text-3xl sm:text-4xl font-poppins font-extrabold text-navy-blue tracking-tight">
+          <span className="type-eyebrow">SST Trust Center</span>
+          <h2 className="type-section-heading">
             Why Local Pet Owners Trust SST Groomers
-          </p>
-          <p className="text-md text-slate-gray font-inter leading-relaxed">
-            We operate a clean, transparent, open-concept salon at Coimbatore. 
+          </h2>
+          <p className="type-section-subtitle max-w-xl mx-auto">
+            We operate a clean, transparent, open-concept salon in Coimbatore. 
             Pet parents can see exactly how we groom their loved ones. Here is our live trust metrics dashboard.
           </p>
         </div>
@@ -126,14 +123,14 @@ export default function TrustDashboard() {
             label="Hygiene Score"
             icon={CheckCircle2}
             color="stroke-sky-400"
-            textColor="text-sky-500"
+            textColor="text-zinc-900"
           />
           <ProgressRing
             percentage={96}
             label="On-Time Appointments"
             icon={Award}
-            color="stroke-indigo-400"
-            textColor="text-indigo-500"
+            color="stroke-indigo-500"
+            textColor="text-indigo-600"
           />
           <ProgressRing
             percentage={98}
@@ -146,8 +143,8 @@ export default function TrustDashboard() {
             percentage={91}
             label="Repeat Customers"
             icon={Heart}
-            color="stroke-rose-400"
-            textColor="text-rose-500"
+            color="stroke-pink-500"
+            textColor="text-pink-500"
           />
         </div>
 
@@ -159,20 +156,20 @@ export default function TrustDashboard() {
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className="p-6 rounded-2xl glass-card flex flex-col justify-between hover:translate-y-[-4px] hover:shadow-md transition-all duration-300"
+              transition={{ duration: 0.4, delay: idx * 0.08 }}
+              className="p-6 rounded-[20px] glass-card flex flex-col justify-between hover:translate-y-[-4px] hover:shadow-md transition-all duration-300 border border-slate-200/50"
             >
               <div className="flex justify-between items-start mb-4">
-                <span className="text-sm font-semibold text-slate-gray font-poppins">{stat.label}</span>
-                <div className="p-2 rounded-xl bg-sky-50 text-sky-500">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{stat.label}</span>
+                <div className="p-2 rounded-xl bg-yellow-50 text-zinc-900">
                   <stat.icon className="h-5 w-5" />
                 </div>
               </div>
               <div>
-                <span className="text-3xl font-extrabold text-navy-blue font-poppins">
+                <span className="text-3xl font-extrabold text-slate-900">
                   <CountUp to={stat.value} suffix={stat.suffix} decimals={stat.decimals} />
                 </span>
-                <p className="text-xs text-slate-gray mt-1 font-inter">{stat.desc}</p>
+                <p className="text-[11px] text-slate-400 mt-1 font-medium leading-normal">{stat.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -186,21 +183,21 @@ export default function TrustDashboard() {
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4, delay: (idx + 4) * 0.1 }}
-              className="p-6 rounded-2xl glass-card flex items-center justify-between hover:translate-y-[-4px] hover:shadow-md transition-all duration-300"
+              transition={{ duration: 0.4, delay: (idx + 4) * 0.08 }}
+              className="p-6 rounded-[20px] glass-card flex items-center justify-between hover:translate-y-[-4px] hover:shadow-md transition-all duration-300 border border-slate-200/50"
             >
               <div className="flex gap-4 items-center">
-                <div className="p-3 rounded-xl bg-indigo-50 text-indigo-500">
+                <div className="p-3 rounded-xl bg-yellow-100 text-indigo-600">
                   <stat.icon className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-semibold text-slate-gray font-poppins block">{stat.label}</span>
-                  <span className="text-2xl font-extrabold text-navy-blue font-poppins">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{stat.label}</span>
+                  <span className="text-2xl font-extrabold text-slate-900">
                     <CountUp to={stat.value} suffix={stat.suffix} decimals={stat.decimals} />
                   </span>
                 </div>
               </div>
-              <span className="text-xs text-slate-gray font-inter max-w-[120px] text-right">{stat.desc}</span>
+              <span className="text-xs text-slate-400 text-right font-medium max-w-[120px]">{stat.desc}</span>
             </motion.div>
           ))}
         </div>
