@@ -40,31 +40,44 @@ export default function BeforeAfter() {
   }, []);
 
   return (
-    <section id="before-after" className="py-24 bg-gradient-to-b from-sky-50/40 to-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="before-after" className="py-24 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%)" }}>
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-0 right-0 w-[600px] h-[500px] rounded-full bg-sky-50/60 blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-indigo-50/40 blur-[100px]" />
+        <div className="absolute inset-0 dot-grid" />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-xs font-bold tracking-widest text-sky-500 uppercase font-poppins">
-            Transformations
-          </h2>
-          <h3 className="text-3xl sm:text-4xl font-poppins font-extrabold text-navy-blue tracking-tight">
-            Coimbatore&apos;s Best Pet Makeovers
-          </h3>
-          <p className="text-md text-slate-gray font-inter leading-relaxed">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="section-header"
+        >
+          <p className="type-eyebrow">Transformations</p>
+          <h2 className="type-h1 mt-1 mb-4">Coimbatore&apos;s Best Pet Makeovers</h2>
+          <p className="type-body text-slate-500">
             Drag the slider horizontally to view the before-and-after transformation of pets groomed in our salon. See the difference our gentle care and premium styling can make!
           </p>
-        </div>
+        </motion.div>
 
         {/* Interactive Comparison Widget */}
-        <div className="max-w-3xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-3xl mx-auto"
+        >
           <div
             ref={containerRef}
             onMouseMove={handleMouseMove}
             onTouchMove={handleTouchMove}
             onMouseDown={() => setIsDragging(true)}
             onTouchStart={() => setIsDragging(true)}
-            className="relative h-[450px] w-full rounded-[32px] overflow-hidden shadow-2xl border border-sky-100 cursor-ew-resize select-none"
+            className="relative h-[460px] w-full rounded-[28px] overflow-hidden shadow-2xl shadow-slate-900/15 border border-white cursor-ew-resize select-none"
           >
             {/* After Image (Full Background) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -104,16 +117,16 @@ export default function BeforeAfter() {
 
             {/* Divider Line & Handle */}
             <div
-              className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20"
+              className="absolute top-0 bottom-0 w-0.5 bg-white/90 cursor-ew-resize z-20 shadow-[0_0_20px_rgba(255,255,255,0.5)]"
               style={{ left: `${sliderPosition}%` }}
             >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white text-navy-blue shadow-lg border border-sky-100 flex items-center justify-center pulse-glow">
-                <ArrowLeftRight className="h-4 w-4 stroke-[2.5px]" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white text-[#1E3A8A] flex items-center justify-center slider-handle">
+                <ArrowLeftRight className="h-5 w-5 stroke-[2.5px]" />
               </div>
             </div>
 
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </section>

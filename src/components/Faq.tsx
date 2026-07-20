@@ -49,11 +49,10 @@ export default function Faq() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.4, delay: idx * 0.06 }}
-                className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
-                  isOpen
+                className={`rounded-2xl border transition-all duration-200 overflow-hidden ${isOpen
                     ? "border-sky-200 bg-gradient-to-br from-sky-50/80 to-white shadow-md shadow-sky-100/50"
                     : "border-slate-100 bg-white hover:border-sky-100 hover:shadow-sm"
-                }`}
+                  }`}
               >
                 <button
                   onClick={() => toggle(idx)}
@@ -65,11 +64,10 @@ export default function Faq() {
                   <span className={`font-poppins font-semibold text-[15px] leading-snug transition-colors ${isOpen ? "text-[#1d4ed8]" : "text-[#1E3A8A]"}`}>
                     {faq.question}
                   </span>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
-                    isOpen
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${isOpen
                       ? "bg-sky-500 text-white shadow-md shadow-sky-200"
                       : "bg-sky-50 text-sky-500 border border-sky-100"
-                  }`}>
+                    }`}>
                     {isOpen
                       ? <Minus className="h-3.5 w-3.5" aria-hidden="true" />
                       : <Plus className="h-3.5 w-3.5" aria-hidden="true" />

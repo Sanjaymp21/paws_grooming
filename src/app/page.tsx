@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Hero from "@/components/Hero";
+import PetCalorieCalculator from "@/components/PetCalorieCalculator";
 import HomeStats from "@/components/HomeStats";
 import HomeCTAStrip from "@/components/HomeCTAStrip";
 
@@ -13,6 +14,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <PetCalorieCalculator />
       <HomeStats />
       <HomeCTAStrip />
     </>

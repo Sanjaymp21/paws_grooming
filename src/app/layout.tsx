@@ -50,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} ${poppins.variable} font-inter min-h-screen flex flex-col bg-white text-slate-800 antialiased`}
+        className={`${inter.variable} ${poppins.variable} font-inter min-h-screen flex flex-col text-slate-800 antialiased`}
       >
         {/* Skip to content for screen readers */}
         <a

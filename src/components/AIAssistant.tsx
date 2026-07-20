@@ -128,115 +128,138 @@ export default function AIAssistant() {
   return (
     <>
       {/* Floating Button */}
-      <button
+      <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-tr from-navy-blue to-sky-400 text-white shadow-xl shadow-sky-300 flex items-center justify-center cursor-pointer pulse-glow hover:scale-105 transition-all z-40"
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full text-white flex items-center justify-center cursor-pointer z-40 pulse-glow"
+        style={{ background: "linear-gradient(135deg, #1d4ed8, #1E3A8A)", boxShadow: "0 8px 32px rgba(29,78,216,0.4)" }}
         aria-label="Toggle assistant"
       >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageSquare className="h-6 w-6" />}
-      </button>
+        <AnimatePresence mode="wait" initial={false}>
+          {isOpen ? (
+            <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
+              <X className="h-6 w-6" />
+            </motion.div>
+          ) : (
+            <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+              <MessageSquare className="h-6 w-6" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.button>
 
       {/* Chat Window Panel */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.88, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-6 w-[340px] sm:w-[380px] h-[500px] rounded-[30px] glass-card-dark border border-white/15 shadow-2xl flex flex-col justify-between overflow-hidden z-40 text-left"
+            exit={{ opacity: 0, scale: 0.88, y: 24 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed bottom-24 right-6 w-[340px] sm:w-[390px] h-[520px] rounded-[28px] overflow-hidden z-40 text-left flex flex-col"
+            style={{ boxShadow: "0 24px 80px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.2)" }}
           >
             {/* Header */}
-            <div className="p-4 bg-navy-blue/70 border-b border-white/10 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">🐶</span>
+            <div className="px-5 py-4 flex justify-between items-center" style={{ background: "linear-gradient(135deg, #0d1a4a 0%, #1E3A8A 100%)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-lg border border-white/10">🐶</div>
                 <div>
-                  <h4 className="font-poppins font-black text-sm text-white">PetCare AI Assistant</h4>
-                  <span className="text-[9px] text-sky-300 font-semibold tracking-wider uppercase block font-poppins">Coimbatore local bot</span>
+                  <h4 className="font-poppins font-black text-[13px] text-white leading-none">PetCare AI Assistant</h4>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+                    <span className="text-[9px] text-sky-300 font-bold tracking-wider uppercase font-poppins">Online · Coimbatore Bot</span>
+                  </div>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded-lg text-sky-200 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-2 rounded-xl text-sky-200 hover:text-white hover:bg-white/10 transition-all"
+                aria-label="Close assistant"
               >
-                <X className="h-4.5 w-4.5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
             {/* Chat Messages Log */}
-            <div className="flex-grow p-4 overflow-y-auto space-y-3 custom-scrollbar text-xs">
+            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 no-scrollbar text-xs" style={{ background: "rgba(8,15,45,0.97)" }}>
               {messages.map((msg) => {
                 const isBot = msg.sender === "bot";
                 return (
-                  <div
+                  <motion.div
                     key={msg.id}
-                    className={`flex items-end gap-2 max-w-[85%] ${
-                      isBot ? "mr-auto text-left" : "ml-auto flex-row-reverse text-right"
-                    }`}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`flex items-end gap-2 max-w-[88%] ${isBot ? "mr-auto" : "ml-auto flex-row-reverse"}`}
                   >
                     {isBot && (
-                      <div className="h-6.5 w-6.5 rounded-full bg-sky-500/20 text-[10px] flex items-center justify-center shrink-0 shadow-sm border border-sky-400/20 text-white">
+                      <div className="w-7 h-7 rounded-full bg-sky-500/15 text-[11px] flex items-center justify-center shrink-0 border border-sky-400/20">
                         🤖
                       </div>
                     )}
                     <div
-                      className={`p-3 rounded-2xl leading-relaxed font-inter font-medium ${
+                      className={`px-3.5 py-2.5 rounded-2xl leading-relaxed font-inter font-medium text-[12px] ${
                         isBot
-                          ? "bg-white/10 text-slate-100 rounded-bl-none"
-                          : "bg-gradient-to-r from-sky-400 to-sky-500 text-white rounded-br-none shadow-sm"
+                          ? "bg-white/8 text-slate-200 rounded-bl-none border border-white/6"
+                          : "text-white rounded-br-none"
                       }`}
+                      style={!isBot ? { background: "linear-gradient(135deg, #1d4ed8, #1E3A8A)" } : {}}
                     >
                       {msg.text}
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
 
               {/* Loading Typing State */}
               {isTyping && (
-                <div className="flex items-end gap-2 mr-auto text-left max-w-[85%]">
-                  <div className="h-6.5 w-6.5 rounded-full bg-sky-500/20 text-[10px] flex items-center justify-center shrink-0 border border-sky-400/20 text-white">
-                    🤖
-                  </div>
-                  <div className="p-3.5 rounded-2xl bg-white/10 text-slate-200 rounded-bl-none flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-300 animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-300 animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-300 animate-bounce" style={{ animationDelay: "300ms" }} />
+                <div className="flex items-end gap-2 mr-auto max-w-[85%]">
+                  <div className="w-7 h-7 rounded-full bg-sky-500/15 text-[11px] flex items-center justify-center shrink-0 border border-sky-400/20">🤖</div>
+                  <div className="px-4 py-3.5 rounded-2xl rounded-bl-none bg-white/8 border border-white/6 flex items-center gap-1.5">
+                    <span className="typing-dot" />
+                    <span className="typing-dot" />
+                    <span className="typing-dot" />
                   </div>
                 </div>
               )}
               <div ref={chatEndRef} />
             </div>
 
-            {/* Quick Chips Selection */}
-            <div className="px-4 py-2 flex gap-1.5 overflow-x-auto select-none no-scrollbar border-t border-white/5 bg-navy-blue/10">
+            {/* Quick Chips */}
+            <div className="px-4 py-2.5 flex gap-2 overflow-x-auto no-scrollbar" style={{ background: "rgba(8,15,45,0.97)", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
               {quickChips.map((chip, idx) => (
-                <button
+                <motion.button
                   key={idx}
+                  whileTap={{ scale: 0.92 }}
                   onClick={() => handleChipClick(chip)}
-                  className="px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/15 text-[10px] font-poppins font-bold whitespace-nowrap transition-all duration-200"
+                  className="px-3 py-1.5 rounded-xl border border-white/10 text-white text-[10px] font-poppins font-bold whitespace-nowrap transition-all hover:bg-white/10 hover:border-sky-400/30"
+                  style={{ background: "rgba(255,255,255,0.04)" }}
                 >
                   {chip}
-                </button>
+                </motion.button>
               ))}
             </div>
 
             {/* Input Form Footer */}
-            <form onSubmit={handleSend} className="p-3 border-t border-white/10 bg-navy-blue/50 flex gap-2">
+            <form onSubmit={handleSend} className="p-3.5 flex gap-2" style={{ background: "rgba(8,15,45,0.97)", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
               <input
                 type="text"
                 placeholder="Ask about hours, pricing, vaccines..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                className="flex-grow px-3 py-2 rounded-xl text-xs text-white focus:outline-none bg-white/5 border border-white/10"
+                className="flex-grow px-3.5 py-2.5 rounded-xl text-[12px] text-white placeholder:text-slate-500 focus:outline-none border border-white/8 focus:border-sky-400/40"
+                style={{ background: "rgba(255,255,255,0.05)" }}
               />
-              <button
+              <motion.button
                 type="submit"
-                className="p-2.5 rounded-xl bg-sky-500 text-white hover:bg-sky-600 transition-colors"
+                whileTap={{ scale: 0.93 }}
+                className="p-2.5 rounded-xl text-white flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, #1d4ed8, #1E3A8A)" }}
                 aria-label="Send"
               >
-                <Send className="h-4.5 w-4.5" />
-              </button>
+                <Send className="h-4 w-4" />
+              </motion.button>
             </form>
           </motion.div>
         )}

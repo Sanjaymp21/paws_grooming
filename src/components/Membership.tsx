@@ -32,7 +32,7 @@ export default function Membership() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
-          
+
           {/* Content Column */}
           <div className="lg:col-span-6 text-left space-y-8">
             <div className="space-y-4">
@@ -43,7 +43,7 @@ export default function Membership() {
                 SST Groomers Membership
               </h3>
               <p className="text-md text-slate-gray font-inter leading-relaxed">
-                Join our premium loyalty club and give your pet the regular pampering they deserve. 
+                Join our premium loyalty club and give your pet the regular pampering they deserve.
                 We keep track of your visits digitally—no physical cards to lose!
               </p>
             </div>
@@ -100,7 +100,7 @@ export default function Membership() {
             {/* We will embed the Rewards Dashboard right next to this, rendering in a preview block! */}
             <div className="w-full max-w-md p-6 rounded-[32px] glass-card border border-sky-100 shadow-xl relative overflow-hidden bg-radial-gradient">
               <div className="absolute top-0 right-0 w-24 h-24 bg-sky-200/20 rounded-full blur-xl" />
-              
+
               {/* Header */}
               <div className="flex justify-between items-center mb-6">
                 <span className="font-poppins text-xs font-bold text-navy-blue tracking-wider uppercase">Club Wallet</span>
@@ -110,7 +110,7 @@ export default function Membership() {
               {/* VIP Card */}
               <div className="bg-gradient-to-br from-navy-blue via-[#182d6b] to-[#0f1d47] rounded-3xl p-6 text-white shadow-lg relative overflow-hidden mb-6 group cursor-pointer hover:scale-102 transition-transform duration-300">
                 <div className="absolute -right-12 -bottom-12 w-40 h-40 bg-sky-500/10 rounded-full blur-2xl group-hover:bg-sky-500/20 transition-colors" />
-                
+
                 <div className="flex justify-between items-start mb-10">
                   <div>
                     <span className="text-[10px] text-sky-200 font-semibold tracking-widest uppercase font-poppins">SST Loyal Member</span>
@@ -137,7 +137,7 @@ export default function Membership() {
                   <span className="text-xs font-bold text-navy-blue font-poppins">Visits Completed (Grooming)</span>
                   <span className="text-xs font-bold text-sky-500 font-poppins">75% (3/4 Sessions)</span>
                 </div>
-                
+
                 {/* Dots */}
                 <div className="flex gap-2 items-center">
                   <div className="h-4 w-4 rounded-full bg-sky-500 border border-sky-400 flex items-center justify-center text-[10px] text-white font-bold">✓</div>
