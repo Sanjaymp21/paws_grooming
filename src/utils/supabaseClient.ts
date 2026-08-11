@@ -139,7 +139,7 @@ export async function updateApplicationStatusInDb(id: string, status: SupabaseAp
 // ----------------------------------------------------
 // USER & ADMIN AUTH HELPERS
 // ----------------------------------------------------
-export async function signUpUserWithSupabase(email: string, password: string, fullName: string) {
+export async function signUpUserWithSupabase(email: string, password: string, fullName: string, phone?: string) {
   try {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -147,6 +147,7 @@ export async function signUpUserWithSupabase(email: string, password: string, fu
       options: {
         data: {
           full_name: fullName,
+          phone: phone,
           role: "user",
         },
       },
@@ -170,5 +171,15 @@ export async function signInUserWithSupabase(email: string, password: string) {
     return { success: true, user: data.user, session: data.session };
   } catch (err: any) {
     return { success: false, error: err.message || "Invalid email or password" };
+  }
+}
+
+export async function signOutUserWithSupabase() {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Sign out failed" };
   }
 }

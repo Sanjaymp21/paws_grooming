@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import { groomingPackages } from "../utils/mockData";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, Sparkles, CheckCircle2, Scissors, ChevronDown } from "lucide-react";
-import { submitApplicationToDb } from "../utils/supabaseClient";
+import { submitApplicationToDb, supabase } from "../utils/supabaseClient";
+import canvasConfetti from "canvas-confetti";
 
 const timeSlots = ["09:00 AM", "10:30 AM", "12:00 PM", "01:30 PM", "03:00 PM", "04:30 PM", "06:00 PM"];
 
@@ -50,6 +51,40 @@ export default function AppointmentForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [bookedSession, setBookedSession] = useState<any | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        if (data.user.user_metadata?.full_name) {
+          setOwnerName(data.user.user_metadata.full_name);
+        }
+        if (data.user.email) {
+          setEmail(data.user.email);
+        }
+        if (data.user.user_metadata?.phone) {
+          setPhone(data.user.user_metadata.phone);
+        }
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        if (session.user.user_metadata?.full_name) {
+          setOwnerName(session.user.user_metadata.full_name);
+        }
+        if (session.user.email) {
+          setEmail(session.user.email);
+        }
+        if (session.user.user_metadata?.phone) {
+          setPhone(session.user.user_metadata.phone);
+        }
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const handlePackageSelect = (e: Event) => {

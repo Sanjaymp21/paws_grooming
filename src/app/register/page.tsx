@@ -26,7 +26,7 @@ export default function RegisterPage() {
     }
 
     setLoading(true);
-    const res = await signUpUserWithSupabase(email, password, name);
+    const res = await signUpUserWithSupabase(email, password, name, phone);
     setLoading(false);
 
     if (res.success) {

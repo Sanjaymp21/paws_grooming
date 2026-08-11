@@ -2,11 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { KeyRound, Mail, Sparkles, AlertCircle, ArrowLeft, Heart } from "lucide-react";
 import { signInUserWithSupabase } from "@/utils/supabaseClient";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -24,6 +26,10 @@ export default function LoginPage() {
 
     if (res.success) {
       setSuccess(true);
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 1000);
     } else {
       setError(res.error || "Failed to authenticate.");
     }

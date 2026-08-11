@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Scissors, Menu, X, Sparkles, ShoppingBag, LogIn } from "lucide-react";
+import { Scissors, Menu, X, Sparkles, ShoppingBag, LogIn, LogOut, User as UserIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase, signOutUserWithSupabase } from "@/utils/supabaseClient";
+import { User } from "@supabase/supabase-js";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -22,7 +24,27 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await signOutUserWithSupabase();
+    setUser(null);
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -163,16 +185,36 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
 
-                {/* Login Button */}
-                <motion.div whileHover={{ scale: 1.03, y: -1 }} whileTap={{ scale: 0.97 }}>
-                  <Link
-                    href="/login"
-                    className="relative inline-flex items-center gap-1.5 font-poppins font-bold text-xs px-4 py-2.5 rounded-xl border bg-yellow-50/50 dark:bg-slate-900/50 border-[#D1D5DB] dark:border-white/10 text-[#334155] dark:text-slate-300 hover:bg-yellow-100/50 dark:hover:bg-slate-800/80 hover:border-zinc-900 dark:hover:border-yellow-400/50 hover:text-zinc-900 dark:hover:text-white transition-all"
-                  >
-                    <LogIn className="h-4 w-4" />
-                    <span>Login</span>
-                  </Link>
-                </motion.div>
+                {/* Auth: Dynamic User / Login / Logout */}
+                {user ? (
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-400/15 border border-amber-400/30 text-xs font-poppins font-bold text-zinc-900 dark:text-yellow-400">
+                      <UserIcon className="h-3.5 w-3.5" />
+                      <span className="max-w-[110px] truncate">
+                        {user.user_metadata?.full_name || user.email?.split("@")[0]}
+                      </span>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.03, y: -1 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={handleLogout}
+                      className="relative inline-flex items-center gap-1.5 font-poppins font-bold text-xs px-3.5 py-2.5 rounded-xl border bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white transition-all cursor-pointer"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Logout</span>
+                    </motion.button>
+                  </div>
+                ) : (
+                  <motion.div whileHover={{ scale: 1.03, y: -1 }} whileTap={{ scale: 0.97 }}>
+                    <Link
+                      href="/login"
+                      className="relative inline-flex items-center gap-1.5 font-poppins font-bold text-xs px-4 py-2.5 rounded-xl border bg-yellow-50/50 dark:bg-slate-900/50 border-[#D1D5DB] dark:border-white/10 text-[#334155] dark:text-slate-300 hover:bg-yellow-100/50 dark:hover:bg-slate-800/80 hover:border-zinc-900 dark:hover:border-yellow-400/50 hover:text-zinc-900 dark:hover:text-white transition-all"
+                    >
+                      <LogIn className="h-4 w-4" />
+                      <span>Login</span>
+                    </Link>
+                  </motion.div>
+                )}
 
                 {/* Book Appointment CTA */}
                 <motion.div 
@@ -296,13 +338,23 @@ export default function Navbar() {
                           <ShoppingBag className="h-4 w-4" />
                           Products
                         </Link>
-                        <Link
-                          href="/login"
-                          className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border bg-yellow-50/50 border-[#D1D5DB] text-[#334155] hover:bg-yellow-100/50 hover:border-zinc-900 hover:text-zinc-900 font-poppins font-bold text-xs transition-all"
-                        >
-                          <LogIn className="h-4 w-4" />
-                          Login
-                        </Link>
+                        {user ? (
+                          <button
+                            onClick={handleLogout}
+                            className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border bg-rose-500/10 border-rose-500/30 text-rose-600 font-poppins font-bold text-xs hover:bg-rose-600 hover:text-white transition-all cursor-pointer"
+                          >
+                            <LogOut className="h-4 w-4" />
+                            Logout
+                          </button>
+                        ) : (
+                          <Link
+                            href="/login"
+                            className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border bg-yellow-50/50 border-[#D1D5DB] text-[#334155] hover:bg-yellow-100/50 hover:border-zinc-900 hover:text-zinc-900 font-poppins font-bold text-xs transition-all"
+                          >
+                            <LogIn className="h-4 w-4" />
+                            Login
+                          </Link>
+                        )}
                       </div>
 
                       <Link

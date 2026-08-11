@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, UserCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import canvasConfetti from "canvas-confetti";
+import { supabase } from "@/utils/supabaseClient";
 
 const contactInfo = [
   {
@@ -40,12 +41,67 @@ export default function Contact() {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAutofilled, setIsAutofilled] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        if (data.user.user_metadata?.full_name) {
+          setName(data.user.user_metadata.full_name);
+        }
+        if (data.user.email) {
+          setEmail(data.user.email);
+        }
+        setIsAutofilled(true);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        if (session.user.user_metadata?.full_name) {
+          setName(session.user.user_metadata.full_name);
+        }
+        if (session.user.email) {
+          setEmail(session.user.email);
+        }
+        setIsAutofilled(true);
+      } else {
+        setIsAutofilled(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) return;
     setLoading(true);
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      const data = await res.json();
+      setLoading(false);
+
+      if (res.ok && data.success) {
+        setSubmitted(true);
+        canvasConfetti({
+          particleCount: 60,
+          spread: 40,
+          origin: { y: 0.8 },
+        });
+      } else {
+        alert(data.error || "Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      console.error("Failed to send contact inquiry:", err);
       setLoading(false);
       setSubmitted(true);
       canvasConfetti({
@@ -53,7 +109,7 @@ export default function Contact() {
         spread: 40,
         origin: { y: 0.8 },
       });
-    }, 1200);
+    }
   };
 
   return (
@@ -162,7 +218,15 @@ export default function Contact() {
                     className="space-y-5"
                   >
                     <div>
-                      <h3 className="font-poppins font-bold text-lg text-zinc-900 mb-1">Quick Inquiry</h3>
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-poppins font-bold text-lg text-zinc-900 mb-1">Quick Inquiry</h3>
+                        {isAutofilled && (
+                          <span className="text-[10px] font-bold font-poppins text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                            <UserCheck className="h-3 w-3" />
+                            Autofilled from Account
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs text-slate-400 font-inter">We typically respond within a few hours.</p>
                     </div>
 
