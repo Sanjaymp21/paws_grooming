@@ -148,12 +148,30 @@ export async function signUpUserWithSupabase(email: string, password: string, fu
         data: {
           full_name: fullName,
           phone: phone,
+          phone_number: phone,
           role: "user",
         },
       },
     });
 
     if (error) throw error;
+
+    if (data.user) {
+      try {
+        await supabase.from("profiles").upsert([
+          {
+            id: data.user.id,
+            email: email,
+            full_name: fullName,
+            phone: phone || "",
+            role: "user",
+          },
+        ]);
+      } catch (profErr) {
+        console.warn("Profiles table upsert notice:", profErr);
+      }
+    }
+
     return { success: true, user: data.user };
   } catch (err: any) {
     return { success: false, error: err.message || "Sign up failed" };
