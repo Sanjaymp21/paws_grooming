@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import AIAssistant from "@/components/AIAssistant";
 import PageTransition from "@/components/ui/PageTransition";
 import BackgroundDecorations from "@/components/ui/BackgroundDecorations";
 import CursorPawTrail from "@/components/ui/CursorPawTrail";
@@ -67,7 +66,6 @@ export default function RootLayout({
         </main>
 
         <Footer />
-        <AIAssistant />
         <CursorPawTrail />
       </body>
     </html>
