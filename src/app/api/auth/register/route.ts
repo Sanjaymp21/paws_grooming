@@ -97,8 +97,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      user: signUpData.user,
-      session: signUpData.session,
+      user: user,
+      session: null,
     });
   } catch (err: any) {
     console.error("[Register API Error]:", err);
