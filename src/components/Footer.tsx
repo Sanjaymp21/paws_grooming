@@ -101,7 +101,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4.5 w-4.5 text-sky-400 shrink-0" />
-                <a href="mailto:contact@sstgroomers.in" className="hover:text-white transition-colors">contact@sstgroomers.in</a>
+                <a href="mailto:sstgroomers@gmail.com" className="hover:text-white transition-colors">sstgroomers@gmail.com</a>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="h-4.5 w-4.5 text-sky-400 shrink-0" />

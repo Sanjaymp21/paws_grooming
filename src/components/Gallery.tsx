@@ -1,17 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
-import { galleryItems, galleryCategories } from "../utils/mockData";
+import React, { useState, useEffect } from "react";
+import { galleryItems as defaultGalleryItems, galleryCategories } from "../utils/mockData";
+import { fetchGalleryItemsFromDb, SupabaseGalleryItem } from "../utils/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 import { ZoomIn, Camera } from "lucide-react";
 
 export default function Gallery() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [items, setItems] = useState<Array<{ id: string; category: string; title: string; imageUrl: string }>>(defaultGalleryItems);
+
+  useEffect(() => {
+    async function loadGallery() {
+      const dbItems = await fetchGalleryItemsFromDb();
+      if (dbItems && dbItems.length > 0) {
+        setItems(
+          dbItems.map((item) => ({
+            id: item.id,
+            category: item.category,
+            title: item.title,
+            imageUrl: item.image_url,
+          }))
+        );
+      }
+    }
+    loadGallery();
+  }, []);
 
   const filteredItems =
     activeCategory === "All"
-      ? galleryItems
-      : galleryItems.filter((item) => item.category === activeCategory);
+      ? items
+      : items.filter((item) => item.category === activeCategory);
 
   const aspectRatios = ["aspect-[4/3]", "aspect-square", "aspect-[4/5]", "aspect-[4/3]", "aspect-[4/5]", "aspect-square"];
 

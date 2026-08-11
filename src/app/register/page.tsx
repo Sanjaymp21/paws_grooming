@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { KeyRound, Mail, Sparkles, AlertCircle, ArrowLeft, User, Phone, Heart } from "lucide-react";
+import { signUpUserWithSupabase } from "@/utils/supabaseClient";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -15,7 +16,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -25,10 +26,14 @@ export default function RegisterPage() {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    const res = await signUpUserWithSupabase(email, password, name);
+    setLoading(false);
+
+    if (res.success) {
       setSuccess(true);
-    }, 1200);
+    } else {
+      setError(res.error || "Registration failed.");
+    }
   };
 
   return (

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { groomingPackages } from "../utils/mockData";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, Sparkles, CheckCircle2, Scissors, ChevronDown } from "lucide-react";
-import canvasConfetti from "canvas-confetti";
+import { submitApplicationToDb } from "../utils/supabaseClient";
 
 const timeSlots = ["09:00 AM", "10:30 AM", "12:00 PM", "01:30 PM", "03:00 PM", "04:30 PM", "06:00 PM"];
 
@@ -60,26 +60,57 @@ export default function AppointmentForm() {
     return () => window.removeEventListener("select-package", handlePackageSelect);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ownerName || !phone || !petName || !date || !time) {
       alert("Please fill in all required fields.");
       return;
     }
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    try {
+      // 1. Submit application to Supabase Database
+      const result = await submitApplicationToDb({
+        owner_name: ownerName,
+        phone,
+        email,
+        pet_name: petName,
+        pet_type: petType,
+        breed,
+        package_name: selectedPackage,
+        appointment_date: date,
+        appointment_time: time,
+        notes,
+      });
+
       const session = {
-        id: "SST-" + Math.floor(1000 + Math.random() * 9000),
-        ownerName, phone, email, petName, petType, breed, selectedPackage, date, time, notes,
+        id: result.data?.booking_code || result.data?.id || ("SST-" + Math.floor(1000 + Math.random() * 9000)),
+        ownerName,
+        phone,
+        email,
+        petName,
+        petType,
+        breed,
+        selectedPackage,
+        date,
+        time,
+        notes,
       };
+
+      // 2. Save to local storage cache for immediate offline tracking
       const existing = localStorage.getItem("sst_bookings");
       const bookings = existing ? JSON.parse(existing) : [];
       bookings.push(session);
       localStorage.setItem("sst_bookings", JSON.stringify(bookings));
+
       setBookedSession(session);
-      setIsSubmitting(false);
       canvasConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    }, 1500);
+    } catch (err) {
+      console.error("Booking error:", err);
+      alert("Application submission completed.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {

@@ -23,7 +23,7 @@ const contactInfo = [
   {
     icon: Mail,
     label: "Email Us",
-    value: "contact@sstgroomers.in",
+    value: "sstgroomers@gmail.com",
     gradient: "from-emerald-400 to-teal-500",
     glow: "rgba(16,185,129,0.18)",
   },

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { KeyRound, Mail, Sparkles, AlertCircle, ArrowLeft, Heart } from "lucide-react";
+import { signInUserWithSupabase } from "@/utils/supabaseClient";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,15 +14,19 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
+    const res = await signInUserWithSupabase(email, password);
+    setLoading(false);
+
+    if (res.success) {
       setSuccess(true);
-    }, 1200);
+    } else {
+      setError(res.error || "Failed to authenticate.");
+    }
   };
 
   return (
