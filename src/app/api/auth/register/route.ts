@@ -39,14 +39,12 @@ export async function POST(req: Request) {
 
     const formattedPhone = phone ? formatE164Phone(phone) : "";
 
-    // 1. Create user using Admin API (Populates top-level auth.users.phone & avoids trigger failures)
+    // 1. Create user using Admin API (Bypasses email confirmation bottlenecks)
     let user = null;
     const { data: adminData, error: adminError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
-      phone: formattedPhone || undefined,
       email_confirm: true,
-      phone_confirm: true,
       user_metadata: {
         full_name: fullName,
         phone: formattedPhone || phone,
@@ -56,7 +54,7 @@ export async function POST(req: Request) {
     });
 
     if (adminError) {
-      console.warn("[Register API] Admin createUser notice, falling back to anon signUp:", adminError.message);
+      console.warn("[Register API] Admin createUser notice, trying anon signUp:", adminError.message);
       const { data: anonData, error: anonErr } = await supabaseAnon.auth.signUp({
         email,
         password,
@@ -71,11 +69,26 @@ export async function POST(req: Request) {
       });
 
       if (anonErr) {
-        return NextResponse.json({ success: false, error: anonErr.message }, { status: 400 });
+        const userMsg = anonErr.message.includes("Database error")
+          ? "Account already exists or DB trigger issue. Please try logging in."
+          : anonErr.message;
+        return NextResponse.json({ success: false, error: userMsg }, { status: 400 });
       }
       user = anonData.user;
     } else {
       user = adminData.user;
+    }
+
+    // 2. Attempt updating top-level phone if phone provider is enabled
+    if (user && formattedPhone) {
+      try {
+        await supabaseAdmin.auth.admin.updateUserById(user.id, {
+          phone: formattedPhone,
+          phone_confirm: true,
+        });
+      } catch (pErr) {
+        console.warn("[Register API] Phone column update note:", pErr);
+      }
     }
 
     // 3. Upsert into public 'profiles' table for record-keeping
