@@ -39,54 +39,43 @@ export async function POST(req: Request) {
 
     const formattedPhone = phone ? formatE164Phone(phone) : "";
 
-    // 1. Sign up user via Supabase Auth
-    const { data: signUpData, error: signUpError } = await supabaseAnon.auth.signUp({
+    // 1. Create user using Admin API (Populates top-level auth.users.phone & avoids trigger failures)
+    let user = null;
+    const { data: adminData, error: adminError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
-      options: {
-        data: {
-          full_name: fullName,
-          phone: formattedPhone || phone,
-          phone_number: formattedPhone || phone,
-          role: "user",
-        },
+      phone: formattedPhone || undefined,
+      email_confirm: true,
+      phone_confirm: true,
+      user_metadata: {
+        full_name: fullName,
+        phone: formattedPhone || phone,
+        phone_number: formattedPhone || phone,
+        role: "user",
       },
     });
 
-    if (signUpError) {
-      return NextResponse.json(
-        { success: false, error: signUpError.message },
-        { status: 400 }
-      );
-    }
+    if (adminError) {
+      console.warn("[Register API] Admin createUser notice, falling back to anon signUp:", adminError.message);
+      const { data: anonData, error: anonErr } = await supabaseAnon.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            phone: formattedPhone || phone,
+            phone_number: formattedPhone || phone,
+            role: "user",
+          },
+        },
+      });
 
-    const user = signUpData.user;
-
-    // 2. Using Service Role Admin API, directly populate top-level auth.users.phone column!
-    if (user && formattedPhone) {
-      try {
-        const { error: adminUpdateError } = await supabaseAdmin.auth.admin.updateUserById(
-          user.id,
-          {
-            phone: formattedPhone,
-            phone_confirm: true,
-            user_metadata: {
-              full_name: fullName,
-              phone: formattedPhone,
-              phone_number: formattedPhone,
-              role: "user",
-            },
-          }
-        );
-
-        if (adminUpdateError) {
-          console.warn("[Register API] Admin updateUserById phone notice:", adminUpdateError.message);
-        } else {
-          console.log(`[Register API] Top-level auth.users.phone successfully updated to ${formattedPhone} for user ${user.id}`);
-        }
-      } catch (adminErr) {
-        console.warn("[Register API] Admin update exception:", adminErr);
+      if (anonErr) {
+        return NextResponse.json({ success: false, error: anonErr.message }, { status: 400 });
       }
+      user = anonData.user;
+    } else {
+      user = adminData.user;
     }
 
     // 3. Upsert into public 'profiles' table for record-keeping
