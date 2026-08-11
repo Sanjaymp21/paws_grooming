@@ -141,6 +141,23 @@ export async function updateApplicationStatusInDb(id: string, status: SupabaseAp
 // ----------------------------------------------------
 export async function signUpUserWithSupabase(email: string, password: string, fullName: string, phone?: string) {
   try {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, fullName, phone }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      return { success: true, user: result.user, session: result.session };
+    }
+
+    if (result.error) {
+      throw new Error(result.error);
+    }
+
+    // Fallback to client signUp
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -155,23 +172,6 @@ export async function signUpUserWithSupabase(email: string, password: string, fu
     });
 
     if (error) throw error;
-
-    if (data.user) {
-      try {
-        await supabase.from("profiles").upsert([
-          {
-            id: data.user.id,
-            email: email,
-            full_name: fullName,
-            phone: phone || "",
-            role: "user",
-          },
-        ]);
-      } catch (profErr) {
-        console.warn("Profiles table upsert notice:", profErr);
-      }
-    }
-
     return { success: true, user: data.user };
   } catch (err: any) {
     return { success: false, error: err.message || "Sign up failed" };
