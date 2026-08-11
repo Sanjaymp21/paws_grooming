@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { globalOtpCache } from "../generate-otp/route";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://yqcrgttqkvdlwbvzzncl.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "sb_secret_hmu1zh8R9grytwBAft-unw_jy8qQ6k_";
@@ -37,29 +38,46 @@ export async function POST(req: Request) {
     const nowIso = new Date().toISOString();
 
     // 1. Check matching unverified, non-expired OTP record
-    const { data: record, error: recordError } = await supabaseAdmin
-      .from("otp_verifications")
-      .select("*")
-      .eq("phone", formattedPhone)
-      .eq("otp", otp.trim())
-      .eq("verified", false)
-      .gt("expires_at", nowIso)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
+    let isValidOtp = false;
 
-    if (recordError || !record) {
+    try {
+      const { data: record, error: recordError } = await supabaseAdmin
+        .from("otp_verifications")
+        .select("*")
+        .eq("phone", formattedPhone)
+        .eq("otp", otp.trim())
+        .eq("verified", false)
+        .gt("expires_at", nowIso)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (record && !recordError) {
+        isValidOtp = true;
+        await supabaseAdmin
+          .from("otp_verifications")
+          .update({ verified: true })
+          .eq("id", record.id);
+      }
+    } catch (dbErr) {
+      console.warn("[Verify OTP] DB query notice:", dbErr);
+    }
+
+    // Fallback memory check
+    if (!isValidOtp) {
+      const cached = globalOtpCache.get(formattedPhone);
+      if (cached && cached.otp === otp.trim() && cached.expiresAt > Date.now()) {
+        isValidOtp = true;
+        globalOtpCache.delete(formattedPhone);
+      }
+    }
+
+    if (!isValidOtp) {
       return NextResponse.json(
         { success: false, error: "Invalid or expired OTP code. Please check your code or request a new one." },
         { status: 400 }
       );
     }
-
-    // 2. Mark OTP as verified
-    await supabaseAdmin
-      .from("otp_verifications")
-      .update({ verified: true })
-      .eq("id", record.id);
 
     // 3. Find or Create User in Supabase Auth
     const digitsOnly = formattedPhone.replace(/\D/g, "");
