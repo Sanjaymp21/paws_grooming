@@ -201,3 +201,46 @@ export async function signOutUserWithSupabase() {
     return { success: false, error: err.message || "Sign out failed" };
   }
 }
+
+export async function requestPhoneOTP(phone: string) {
+  try {
+    const res = await fetch("/api/auth/generate-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone }),
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to generate OTP");
+    }
+
+    return {
+      success: true,
+      demoOtp: data.demo_otp,
+      expiresAt: data.expires_at,
+      phone: data.phone,
+    };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to request OTP" };
+  }
+}
+
+export async function verifyPhoneOTP(phone: string, otp: string, fullName?: string) {
+  try {
+    const res = await fetch("/api/auth/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone, otp, fullName }),
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Invalid or expired OTP");
+    }
+
+    return { success: true, user: data.user, session: data.session };
+  } catch (err: any) {
+    return { success: false, error: err.message || "OTP verification failed" };
+  }
+}

@@ -4,13 +4,18 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { KeyRound, Mail, Sparkles, AlertCircle, ArrowLeft, Heart } from "lucide-react";
-import { signInUserWithSupabase } from "@/utils/supabaseClient";
+import { KeyRound, Mail, Sparkles, AlertCircle, ArrowLeft, Heart, Phone, ShieldCheck, CheckCircle2, UserPlus, ArrowRight } from "lucide-react";
+import { signInUserWithSupabase, requestPhoneOTP, verifyPhoneOTP } from "@/utils/supabaseClient";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [authMethod, setAuthMethod] = useState<"email" | "phone">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [demoOtp, setDemoOtp] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,6 +37,49 @@ export default function LoginPage() {
       }, 1000);
     } else {
       setError(res.error || "Failed to authenticate.");
+    }
+  };
+
+  const handleSendOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!phone || phone.trim().length < 8) {
+      setError("Please enter a valid phone number with country code.");
+      return;
+    }
+
+    setLoading(true);
+    const res = await requestPhoneOTP(phone);
+    setLoading(false);
+
+    if (res.success) {
+      setOtpSent(true);
+      setDemoOtp(res.demoOtp || "");
+    } else {
+      setError(res.error || "Failed to send OTP.");
+    }
+  };
+
+  const handleVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!otp || otp.trim().length !== 6) {
+      setError("Please enter the 6-digit OTP code.");
+      return;
+    }
+
+    setLoading(true);
+    const res = await verifyPhoneOTP(phone, otp);
+    setLoading(false);
+
+    if (res.success) {
+      setSuccess(true);
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 1000);
+    } else {
+      setError(res.error || "Invalid or expired OTP.");
     }
   };
 
@@ -114,14 +162,47 @@ export default function LoginPage() {
 
           {/* Form Content */}
           <div className="space-y-6">
-            <div className="text-center sm:text-left">
-              <h2 className="text-2xl font-poppins font-black text-zinc-900">Welcome back</h2>
-              <p className="text-xs text-slate-400 font-inter mt-1.5">
-                New to SST Groomers?{" "}
-                <Link href="/register" className="text-zinc-900 hover:text-zinc-900 font-bold font-poppins">
-                  Create an account
-                </Link>
-              </p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+              <div>
+                <h2 className="text-2xl font-poppins font-black text-zinc-900">Welcome back</h2>
+                <p className="text-xs text-slate-500 font-inter mt-0.5">Sign in to your SST Groomers account</p>
+              </div>
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-2xl bg-amber-400/20 hover:bg-amber-400 text-zinc-900 font-bold font-poppins text-xs border border-amber-400/50 hover:shadow-md transition-all duration-200 shrink-0 group shadow-sm"
+              >
+                <UserPlus className="h-4 w-4 text-zinc-900 group-hover:scale-110 transition-transform" />
+                <span>Create Account</span>
+                <ArrowRight className="h-3.5 w-3.5 text-zinc-900 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Mode Switcher Tabs */}
+            <div className="flex rounded-2xl bg-slate-100 p-1 border border-slate-200">
+              <button
+                type="button"
+                onClick={() => { setAuthMethod("email"); setError(""); }}
+                className={`flex-1 py-2 text-xs font-poppins font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                  authMethod === "email"
+                    ? "bg-white text-zinc-900 shadow-sm"
+                    : "text-slate-500 hover:text-zinc-900"
+                }`}
+              >
+                <Mail className="h-3.5 w-3.5" />
+                Email & Password
+              </button>
+              <button
+                type="button"
+                onClick={() => { setAuthMethod("phone"); setError(""); }}
+                className={`flex-1 py-2 text-xs font-poppins font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                  authMethod === "phone"
+                    ? "bg-white text-zinc-900 shadow-sm"
+                    : "text-slate-500 hover:text-zinc-900"
+                }`}
+              >
+                <Phone className="h-3.5 w-3.5" />
+                Phone OTP (Demo)
+              </button>
             </div>
 
             {success ? (
@@ -138,7 +219,7 @@ export default function LoginPage() {
                   </Link>
                 </div>
               </motion.div>
-            ) : (
+            ) : authMethod === "email" ? (
               <form onSubmit={handleLogin} className="space-y-5">
                 {error && (
                   <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-2xl text-xs font-inter flex items-center gap-2">
@@ -209,6 +290,109 @@ export default function LoginPage() {
                   {loading ? "Authenticating..." : "Log In"}
                 </motion.button>
               </form>
+            ) : (
+              /* Phone OTP Form */
+              <div className="space-y-4">
+                {error && (
+                  <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-2xl text-xs font-inter flex items-center gap-2">
+                    <AlertCircle className="h-4.5 w-4.5 text-rose-500 shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                {!otpSent ? (
+                  <form onSubmit={handleSendOTP} className="space-y-4">
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="login-phone" className="text-xs font-poppins font-bold text-zinc-900 uppercase tracking-wider">Phone Number *</label>
+                      <div className="relative">
+                        <input
+                          id="login-phone"
+                          type="tel"
+                          placeholder="+91 98765 43210"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="w-full bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl pl-11 pr-4 py-3.5 text-sm font-inter font-semibold text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 shadow-sm"
+                          required
+                        />
+                        <Phone className="h-4.5 w-4.5 text-slate-300 absolute left-4 top-1/2 -translate-y-1/2" />
+                      </div>
+                      <p className="text-[11px] text-slate-400 font-inter">Enter your mobile number with country code (e.g. +91 9876543210).</p>
+                    </div>
+
+                    <motion.button
+                      type="submit"
+                      disabled={loading}
+                      whileHover={{ y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 text-white font-poppins font-bold shadow-md hover:shadow-lg hover:shadow-yellow-100 active:scale-[0.99] transition-all duration-300 disabled:opacity-80"
+                      style={{ padding: "1rem" }}
+                    >
+                      {loading ? "Generating OTP..." : "Get OTP Code"}
+                    </motion.button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleVerifyOTP} className="space-y-4">
+                    {/* REQUIREMENT 10: DEMO OTP DISPLAY AREA */}
+                    {demoOtp && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-amber-50 border-2 border-dashed border-amber-400 p-4 rounded-2xl text-center space-y-1.5 shadow-sm"
+                      >
+                        <div className="flex items-center justify-center gap-1.5 text-xs font-poppins font-black text-amber-900 uppercase tracking-wider">
+                          <Sparkles className="h-4 w-4 text-amber-600" />
+                          Demo OTP (College Project Mode)
+                        </div>
+                        <div className="py-2">
+                          <span className="text-3xl font-mono font-black tracking-[0.3em] text-zinc-900 bg-white px-5 py-2 rounded-xl border border-amber-300 inline-block shadow-md">
+                            {demoOtp}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-amber-800 font-inter font-medium">
+                          OTP valid for <span className="font-bold">5 minutes</span>. Enter code below to sign in.
+                        </p>
+                      </motion.div>
+                    )}
+
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between">
+                        <label htmlFor="login-otp" className="text-xs font-poppins font-bold text-zinc-900 uppercase tracking-wider">Enter 6-Digit OTP Code *</label>
+                        <button
+                          type="button"
+                          onClick={() => { setOtpSent(false); setDemoOtp(""); setOtp(""); }}
+                          className="text-[11px] text-sky-600 font-poppins font-bold hover:underline"
+                        >
+                          Change Number
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <input
+                          id="login-otp"
+                          type="text"
+                          maxLength={6}
+                          placeholder="123456"
+                          value={otp}
+                          onChange={(e) => setOtp(e.target.value)}
+                          className="w-full bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl pl-11 pr-4 py-3.5 text-base font-mono font-bold tracking-widest text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 shadow-sm text-center"
+                          required
+                        />
+                        <ShieldCheck className="h-5 w-5 text-slate-300 absolute left-4 top-1/2 -translate-y-1/2" />
+                      </div>
+                    </div>
+
+                    <motion.button
+                      type="submit"
+                      disabled={loading}
+                      whileHover={{ y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-poppins font-bold shadow-md hover:shadow-lg hover:shadow-emerald-100 active:scale-[0.99] transition-all duration-300 disabled:opacity-80"
+                      style={{ padding: "1rem" }}
+                    >
+                      {loading ? "Verifying OTP..." : "Verify & Log In"}
+                    </motion.button>
+                  </form>
+                )}
+              </div>
             )}
 
             {/* Social Logins Split */}
@@ -248,6 +432,23 @@ export default function LoginPage() {
                 />
                 Apple
               </button>
+            </div>
+
+            {/* Prominent Create Account CTA Banner */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-100/60 border border-amber-300 flex items-center justify-between gap-3 shadow-sm">
+              <div>
+                <p className="text-xs font-poppins font-bold text-zinc-900 flex items-center gap-1">
+                  <span>Don&apos;t have an account yet?</span>
+                </p>
+                <p className="text-[11px] font-inter text-slate-500">Sign up to access coat advice & rewards.</p>
+              </div>
+              <Link
+                href="/register"
+                className="px-4 py-2 rounded-xl bg-zinc-900 hover:bg-amber-500 hover:text-zinc-900 text-white font-poppins font-bold text-xs transition-colors shrink-0 shadow-md flex items-center gap-1.5"
+              >
+                <span>Sign Up Free</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
 
             {/* Footer options */}
