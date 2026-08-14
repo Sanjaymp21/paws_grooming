@@ -1,20 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { KeyRound, Mail, Sparkles, AlertCircle, ArrowLeft, Heart, UserPlus, ArrowRight } from "lucide-react";
-import { signInUserWithSupabase } from "@/utils/supabaseClient";
+import { KeyRound, Mail, Sparkles, AlertCircle, ArrowLeft, Heart, UserPlus, ArrowRight, User as UserIcon, LogOut } from "lucide-react";
+import { supabase, signInUserWithSupabase, signOutUserWithSupabase } from "@/utils/supabaseClient";
+import { User } from "@supabase/supabase-js";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user ?? null);
+    });
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,12 +35,17 @@ export default function LoginPage() {
     if (res.success) {
       setSuccess(true);
       setTimeout(() => {
-        router.push("/");
+        router.push("/profile");
         router.refresh();
       }, 1000);
     } else {
       setError(res.error || "Failed to authenticate.");
     }
+  };
+
+  const handleLogout = async () => {
+    await signOutUserWithSupabase();
+    setUser(null);
   };
 
   return (
@@ -129,17 +142,53 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            {success ? (
+            {user && !success ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4.5 rounded-2xl text-center space-y-2.5"
+                className="bg-amber-50/80 border border-amber-200 text-zinc-900 p-6 rounded-2xl text-center space-y-4 shadow-sm"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-amber-400 text-zinc-900 font-black text-lg flex items-center justify-center mx-auto shadow-md">
+                  {user.user_metadata?.full_name ? user.user_metadata.full_name[0] : (user.email ? user.email[0] : "U")}
+                </div>
+                <div>
+                  <p className="text-sm font-poppins font-bold">You are currently logged in</p>
+                  <p className="text-xs font-inter text-slate-500 mt-0.5">{user.email}</p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+                  <Link
+                    href="/profile"
+                    className="flex-1 py-3 px-4 rounded-xl bg-zinc-900 hover:bg-yellow-400 hover:text-zinc-900 text-white font-poppins font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                  >
+                    <UserIcon className="h-4 w-4 text-amber-400 group-hover:text-zinc-900" />
+                    <span>Go to My Profile</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex-1 py-3 px-4 rounded-xl bg-rose-50 hover:bg-rose-600 hover:text-white border border-rose-200 text-rose-600 font-poppins font-bold text-xs transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
+              </motion.div>
+            ) : success ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-5 rounded-2xl text-center space-y-3"
               >
                 <p className="text-sm font-poppins font-bold">Successfully Logged In!</p>
-                <p className="text-xs font-inter text-slate-500">Redirecting to your dashboard...</p>
-                <div className="pt-2">
-                  <Link href="/" className="inline-flex items-center px-4.5 py-2 rounded-xl bg-zinc-900 text-white text-xs font-poppins font-bold hover:bg-yellow-500 transition-all">
-                    Go to Homepage
+                <p className="text-xs font-inter text-slate-500">Redirecting to your user profile...</p>
+                <div className="pt-2 flex justify-center gap-3">
+                  <Link href="/profile" className="inline-flex items-center px-4.5 py-2 rounded-xl bg-zinc-900 text-white text-xs font-poppins font-bold hover:bg-yellow-400 hover:text-zinc-900 transition-all">
+                    View Profile
+                  </Link>
+                  <Link href="/" className="inline-flex items-center px-4.5 py-2 rounded-xl bg-slate-100 text-zinc-900 text-xs font-poppins font-bold hover:bg-slate-200 transition-all">
+                    Homepage
                   </Link>
                 </div>
               </motion.div>
