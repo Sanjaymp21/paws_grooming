@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Scissors, Menu, X, Sparkles, ShoppingBag, LogIn, LogOut, User as UserIcon } from "lucide-react";
+import { Scissors, Menu, X, Sparkles, ShoppingBag, LogIn, LogOut, User as UserIcon, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase, signOutUserWithSupabase } from "@/utils/supabaseClient";
 import { User } from "@supabase/supabase-js";
@@ -27,6 +27,7 @@ export default function Navbar() {
   const [scrollY, setScrollY] = useState(0);
   const [user, setUser] = useState<User | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -46,6 +47,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     await signOutUserWithSupabase();
     setUser(null);
+    setIsProfileOpen(false);
   };
 
   useEffect(() => {
@@ -187,24 +189,73 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
 
-                {/* Auth: Dynamic User / Login / Logout */}
+                {/* Auth: Dynamic Profile Button & Dropdown containing Logout */}
                 {user ? (
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-400/15 border border-amber-400/30 text-xs font-poppins font-bold text-zinc-900 dark:text-yellow-400">
-                      <UserIcon className="h-3.5 w-3.5" />
-                      <span className="max-w-[110px] truncate">
-                        {user.user_metadata?.full_name || user.email?.split("@")[0]}
-                      </span>
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.03, y: -1 }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={handleLogout}
-                      className="relative inline-flex items-center gap-1.5 font-poppins font-bold text-xs px-3.5 py-2.5 rounded-xl border bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white transition-all cursor-pointer"
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsProfileOpen((prev) => !prev)}
+                      className="relative inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/40 text-xs font-poppins font-bold text-zinc-900 dark:text-yellow-400 transition-all cursor-pointer shadow-sm select-none"
                     >
-                      <LogOut className="h-4 w-4" />
-                      <span>Logout</span>
-                    </motion.button>
+                      <div className="w-6 h-6 rounded-full bg-zinc-900 dark:bg-yellow-400 text-yellow-400 dark:text-zinc-900 flex items-center justify-center font-black text-[10.5px] uppercase shadow-sm shrink-0">
+                        {user.user_metadata?.full_name ? user.user_metadata.full_name[0] : (user.email ? user.email[0] : "U")}
+                      </div>
+                      <span className="max-w-[100px] truncate">
+                        Profile
+                      </span>
+                      <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isProfileOpen ? "rotate-180" : ""}`} />
+                    </button>
+
+                    {/* Profile Dropdown Popup Menu */}
+                    <AnimatePresence>
+                      {isProfileOpen && (
+                        <>
+                          {/* Backdrop to close dropdown when clicking outside */}
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => setIsProfileOpen(false)}
+                          />
+
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute right-0 mt-2.5 w-64 bg-white dark:bg-[#111827] border border-amber-200 dark:border-white/10 rounded-2xl p-4 shadow-2xl z-50 overflow-hidden"
+                          >
+                            {/* Header info */}
+                            <div className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-white/8">
+                              <div className="w-10 h-10 rounded-xl bg-amber-400 text-zinc-900 font-black text-base flex items-center justify-center shadow-md shrink-0">
+                                {user.user_metadata?.full_name ? user.user_metadata.full_name[0] : (user.email ? user.email[0] : "U")}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <h4 className="font-poppins font-bold text-xs text-zinc-900 dark:text-white truncate">
+                                  {user.user_metadata?.full_name || "Pet Lover"}
+                                </h4>
+                                <p className="font-inter text-[11px] text-slate-400 dark:text-slate-400 truncate">
+                                  {user.email}
+                                </p>
+                                <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 text-[9.5px] font-bold uppercase tracking-wider">
+                                  Logged In 🐾
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Logout Action Button inside Profile */}
+                            <div className="pt-3">
+                              <button
+                                type="button"
+                                onClick={handleLogout}
+                                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-rose-600 dark:text-rose-400 font-poppins font-bold text-xs hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all cursor-pointer shadow-sm"
+                              >
+                                <LogOut className="h-4 w-4" />
+                                <span>Log Out</span>
+                              </button>
+                            </div>
+                          </motion.div>
+                        </>
+                      )}
+                    </AnimatePresence>
                   </div>
                 ) : (
                   <motion.div whileHover={{ scale: 1.03, y: -1 }} whileTap={{ scale: 0.97 }}>
@@ -357,13 +408,53 @@ export default function Navbar() {
                           Products
                         </Link>
                         {user ? (
-                          <button
-                            onClick={handleLogout}
-                            className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border bg-rose-500/10 border-rose-500/30 text-rose-600 font-poppins font-bold text-xs hover:bg-rose-600 hover:text-white transition-all cursor-pointer"
-                          >
-                            <LogOut className="h-4 w-4" />
-                            Logout
-                          </button>
+                          <div className="space-y-2">
+                            <button
+                              type="button"
+                              onClick={() => setIsProfileOpen((prev) => !prev)}
+                              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border bg-amber-400/15 border-amber-400/40 text-zinc-900 dark:text-yellow-400 font-poppins font-bold text-xs transition-all cursor-pointer"
+                            >
+                              <div className="flex items-center gap-2">
+                                <UserIcon className="h-4 w-4 text-amber-600 dark:text-yellow-400" />
+                                <span>Profile</span>
+                              </div>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isProfileOpen ? "rotate-180" : ""}`} />
+                            </button>
+
+                            <AnimatePresence>
+                              {isProfileOpen && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  className="overflow-hidden bg-amber-50/60 dark:bg-slate-900/60 border border-amber-200/60 dark:border-white/10 rounded-xl p-3.5 space-y-3"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 rounded-full bg-amber-400 text-zinc-900 font-black text-sm flex items-center justify-center shrink-0">
+                                      {user.user_metadata?.full_name ? user.user_metadata.full_name[0] : (user.email ? user.email[0] : "U")}
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <p className="font-poppins font-bold text-xs text-zinc-900 dark:text-white truncate">
+                                        {user.user_metadata?.full_name || "Pet Lover"}
+                                      </p>
+                                      <p className="font-inter text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                                        {user.email}
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  <button
+                                    type="button"
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 text-white font-poppins font-bold text-xs hover:bg-rose-700 transition-all cursor-pointer shadow-sm"
+                                  >
+                                    <LogOut className="h-4 w-4" />
+                                    <span>Log Out</span>
+                                  </button>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
                         ) : (
                           <Link
                             href="/login"
