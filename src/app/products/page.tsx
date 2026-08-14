@@ -1,10 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Heart, ShoppingBag, Eye, Star, X, ArrowLeft, ShoppingCart, Plus, Minus, Check, Scissors, Bone, Sparkles } from "lucide-react";
+import { supabase } from "@/utils/supabaseClient";
+import { User } from "@supabase/supabase-js";
+import LoginRequiredModal from "@/components/LoginRequiredModal";
 
 // Product interface
 interface Product {
@@ -375,6 +378,22 @@ export default function ProductsPage() {
   const [activeQuickView, setActiveQuickView] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   // Filter products based on Category and Search Query
   const filteredProducts = useMemo(() => {
@@ -402,6 +421,10 @@ export default function ProductsPage() {
 
   // Cart operations
   const addToCart = (product: Product) => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
     if (product.availability === "Out of Stock") return;
     setCart((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
@@ -889,6 +912,11 @@ export default function ProductsPage() {
                   </div>
                   <button
                     onClick={() => {
+                      if (!user) {
+                        setIsCartOpen(false);
+                        setShowLoginModal(true);
+                        return;
+                      }
                       setCart([]);
                       setIsCartOpen(false);
                       setOrderPlaced(true);
@@ -936,6 +964,14 @@ export default function ProductsPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* LOGIN REQUIRED MODAL */}
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title="Authentication Required to Shop"
+        message="You haven't logged in yet! Please sign in to your account to add items to your cart and buy pet products."
+      />
 
     </div>
   );

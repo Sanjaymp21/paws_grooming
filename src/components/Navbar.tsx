@@ -7,6 +7,7 @@ import { Scissors, Menu, X, Sparkles, ShoppingBag, LogIn, LogOut, User as UserIc
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase, signOutUserWithSupabase } from "@/utils/supabaseClient";
 import { User } from "@supabase/supabase-js";
+import LoginRequiredModal from "./LoginRequiredModal";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -25,6 +26,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [user, setUser] = useState<User | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -152,14 +154,14 @@ export default function Navbar() {
               </Link>
 
               {/* Desktop Nav links (Inter font, animated state transitions) */}
-              <div className="hidden xl:flex items-center gap-1.5">
+              <div className="hidden lg:flex items-center gap-1 xl:gap-1.5">
                 {navLinks.map((link) => {
                   const active = isActive(link.href);
                   return (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`relative group px-3.5 py-2 rounded-xl text-xs font-poppins font-bold transition-all duration-300 border flex items-center justify-center ${
+                      className={`relative group px-2.5 xl:px-3.5 py-2 rounded-xl text-xs font-poppins font-bold transition-all duration-300 border flex items-center justify-center ${
                         active
                           ? "bg-gradient-to-r from-zinc-900 to-zinc-800 dark:from-yellow-400 dark:to-yellow-500 dark:border-yellow-400 dark:text-black text-white border-zinc-900 shadow-lg shadow-blue-200/35 scale-[1.03]"
                           : "bg-yellow-50/50 dark:bg-slate-900/50 border-[#D1D5DB] dark:border-white/10 text-[#334155] dark:text-slate-300 hover:bg-yellow-100/50 dark:hover:bg-slate-800/80 hover:border-zinc-900 dark:hover:border-yellow-400/50 hover:text-zinc-900 dark:hover:text-white"
@@ -221,19 +223,35 @@ export default function Navbar() {
                   whileHover={{ scale: 1.03, y: -1 }} 
                   whileTap={{ scale: 0.97 }} 
                 >
-                  <Link
-                    href="/book"
-                    className="relative inline-flex items-center gap-2 font-poppins font-bold text-white overflow-hidden shine text-xs px-4.5 py-2.5"
-                    style={{
-                      borderRadius: "12px",
-                      background: "linear-gradient(135deg, #000000 0%, #171717 100%)",
-                      boxShadow: "0 10px 24px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
-                      textDecoration: "none",
-                    }}
-                  >
-                    <Sparkles className="h-4 w-4 text-sky-200" aria-hidden="true" />
-                    <span>Book Now</span>
-                  </Link>
+                  {user ? (
+                    <Link
+                      href="/book"
+                      className="relative inline-flex items-center gap-2 font-poppins font-bold text-white overflow-hidden shine text-xs px-4.5 py-2.5"
+                      style={{
+                        borderRadius: "12px",
+                        background: "linear-gradient(135deg, #000000 0%, #171717 100%)",
+                        boxShadow: "0 10px 24px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                        textDecoration: "none",
+                      }}
+                    >
+                      <Sparkles className="h-4 w-4 text-sky-200" aria-hidden="true" />
+                      <span>Book Now</span>
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowLoginModal(true)}
+                      className="relative inline-flex items-center gap-2 font-poppins font-bold text-white overflow-hidden shine text-xs px-4.5 py-2.5 cursor-pointer"
+                      style={{
+                        borderRadius: "12px",
+                        background: "linear-gradient(135deg, #000000 0%, #171717 100%)",
+                        boxShadow: "0 10px 24px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                      }}
+                    >
+                      <Sparkles className="h-4 w-4 text-sky-200" aria-hidden="true" />
+                      <span>Book Now</span>
+                    </button>
+                  )}
                 </motion.div>
               </div>
 
@@ -357,17 +375,35 @@ export default function Navbar() {
                         )}
                       </div>
 
-                      <Link
-                        href="/book"
-                        className="w-full flex items-center justify-center gap-2 font-poppins font-bold text-white shadow-md text-xs py-3"
-                        style={{
-                          borderRadius: "12px",
-                          background: "linear-gradient(135deg, #000000 0%, #171717 100%)",
-                        }}
-                      >
-                        <Sparkles className="h-4 w-4 text-sky-200" aria-hidden="true" />
-                        Book Appointment
-                      </Link>
+                      {user ? (
+                        <Link
+                          href="/book"
+                          className="w-full flex items-center justify-center gap-2 font-poppins font-bold text-white shadow-md text-xs py-3"
+                          style={{
+                            borderRadius: "12px",
+                            background: "linear-gradient(135deg, #000000 0%, #171717 100%)",
+                          }}
+                        >
+                          <Sparkles className="h-4 w-4 text-sky-200" aria-hidden="true" />
+                          Book Appointment
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsOpen(false);
+                            setShowLoginModal(true);
+                          }}
+                          className="w-full flex items-center justify-center gap-2 font-poppins font-bold text-white shadow-md text-xs py-3 cursor-pointer"
+                          style={{
+                            borderRadius: "12px",
+                            background: "linear-gradient(135deg, #000000 0%, #171717 100%)",
+                          }}
+                        >
+                          <Sparkles className="h-4 w-4 text-sky-200" aria-hidden="true" />
+                          Book Appointment
+                        </button>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -376,6 +412,13 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
+
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title="Authentication Required to Book"
+        message="You haven't logged in yet! Please sign in to your SST Groomers account to book an appointment."
+      />
     </>
   );
 }

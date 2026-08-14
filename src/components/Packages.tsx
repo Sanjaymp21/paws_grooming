@@ -1,10 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Check, Clock, Sparkles, ArrowRight, Star } from "lucide-react";
 import { groomingPackages } from "../utils/mockData";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { supabase } from "../utils/supabaseClient";
+import { User } from "@supabase/supabase-js";
+import LoginRequiredModal from "./LoginRequiredModal";
 
 const cardConfig = [
   {
@@ -53,8 +56,28 @@ const cardConfig = [
 
 export default function Packages() {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const handleSelectPackage = (packageName: string) => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
     if (typeof window !== "undefined") {
       localStorage.setItem("selected-package", packageName);
       const event = new CustomEvent("select-package", { detail: { packageName } });
@@ -242,6 +265,13 @@ export default function Packages() {
       </div>
 
       <div className="section-bottom-line absolute" aria-hidden="true" />
+
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title="Authentication Required to Select Package"
+        message="You haven't logged in yet! Please sign in to your SST Groomers account to select packages and book appointments."
+      />
     </section>
   );
 }

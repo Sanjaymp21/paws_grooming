@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { groomingPackages } from "../utils/mockData";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Clock, Sparkles, CheckCircle2, Scissors, ChevronDown } from "lucide-react";
+import { Calendar, Clock, Sparkles, CheckCircle2, Scissors, ChevronDown, Lock, LogIn } from "lucide-react";
 import { submitApplicationToDb, supabase } from "../utils/supabaseClient";
+import { User } from "@supabase/supabase-js";
+import LoginRequiredModal from "./LoginRequiredModal";
 import canvasConfetti from "canvas-confetti";
 
 const timeSlots = ["09:00 AM", "10:30 AM", "12:00 PM", "01:30 PM", "03:00 PM", "04:30 PM", "06:00 PM"];
@@ -51,9 +53,12 @@ export default function AppointmentForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [bookedSession, setBookedSession] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user ?? null);
       if (data.user) {
         if (data.user.user_metadata?.full_name) {
           setOwnerName(data.user.user_metadata.full_name);
@@ -68,6 +73,7 @@ export default function AppointmentForm() {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
       if (session?.user) {
         if (session.user.user_metadata?.full_name) {
           setOwnerName(session.user.user_metadata.full_name);
@@ -97,6 +103,10 @@ export default function AppointmentForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
     if (!ownerName || !phone || !petName || !date || !time) {
       alert("Please fill in all required fields.");
       return;
@@ -198,6 +208,28 @@ export default function AppointmentForm() {
                     onSubmit={handleSubmit}
                     className="space-y-6"
                   >
+
+                    {!user && (
+                      <div className="bg-amber-50 border-2 border-dashed border-amber-300 rounded-2xl p-4.5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-amber-200/60 flex items-center justify-center text-amber-900 shrink-0">
+                            <Lock className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <h4 className="font-poppins font-extrabold text-xs text-amber-950">You Haven&apos;t Logged In Yet</h4>
+                            <p className="font-inter text-[11.5px] text-amber-800 font-medium">Please sign in to your SST Groomers account to complete your reservation.</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowLoginModal(true)}
+                          className="px-4 py-2.5 rounded-xl bg-zinc-900 text-white font-poppins font-bold text-xs hover:bg-amber-500 hover:text-zinc-900 transition-colors shrink-0 flex items-center gap-1.5 shadow-sm cursor-pointer"
+                        >
+                          <LogIn className="h-3.5 w-3.5" />
+                          <span>Log In Now</span>
+                        </button>
+                      </div>
+                    )}
 
                     {/* Pet type toggle */}
                     <div className="flex flex-col gap-2">
@@ -358,6 +390,13 @@ export default function AppointmentForm() {
           </div>
         </motion.div>
       </div>
+
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title="Authentication Required to Book"
+        message="You haven't logged in yet! Please sign in to your SST Groomers account to complete your appointment booking."
+      />
     </section>
   );
 }
