@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Heart, ShoppingBag, Eye, Star, X, ArrowLeft, ShoppingCart, Plus, Minus, Check, Scissors, Bone, Sparkles } from "lucide-react";
-import { supabase } from "@/utils/supabaseClient";
+import { supabase, fetchCartItemsFromDb, addToCartInDb, updateCartQuantityInDb, clearCartInDb, createOrderInDb } from "@/utils/supabaseClient";
 import { User } from "@supabase/supabase-js";
 import LoginRequiredModal from "@/components/LoginRequiredModal";
 
@@ -381,13 +381,54 @@ export default function ProductsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  const getCartUserId = (): string => {
+    if (user?.id) return user.id;
+    if (typeof window !== "undefined") {
+      let guestId = localStorage.getItem("paws_guest_cart_id");
+      if (!guestId) {
+        guestId = "00000000-0000-4000-8000-" + Math.floor(100000000000 + Math.random() * 900000000000);
+        localStorage.setItem("paws_guest_cart_id", guestId);
+      }
+      return guestId;
+    }
+    return "00000000-0000-4000-8000-111111111111";
+  };
+
+  const loadCartFromDb = async (userId: string) => {
+    const dbItems = await fetchCartItemsFromDb(userId);
+    if (dbItems && dbItems.length > 0) {
+      const restoredCart = dbItems.map((dbItem) => {
+        const matchingProduct = mockProducts.find((p) => p.id === dbItem.product_id);
+        const product: Product = matchingProduct || {
+          id: dbItem.product_id,
+          brand: "Pet Care",
+          name: dbItem.product_name,
+          category: "Accessories",
+          rating: 4.8,
+          reviews: 10,
+          availability: "In Stock",
+          discount: 0,
+          mrp: dbItem.product_price,
+          image: dbItem.product_image,
+          description: dbItem.product_name,
+        };
+        return { product, quantity: dbItem.quantity };
+      });
+      setCart(restoredCart);
+    }
+  };
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user ?? null);
+      const u = data.user ?? null;
+      setUser(u);
+      loadCartFromDb(u?.id || getCartUserId());
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setUser(u);
+      loadCartFromDb(u?.id || getCartUserId());
     });
 
     return () => {
@@ -421,11 +462,8 @@ export default function ProductsPage() {
 
   // Cart operations
   const addToCart = (product: Product) => {
-    if (!user) {
-      setShowLoginModal(true);
-      return;
-    }
     if (product.availability === "Out of Stock") return;
+
     setCart((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
@@ -435,20 +473,29 @@ export default function ProductsPage() {
       }
       return [...prev, { product, quantity: 1 }];
     });
+
+    // Sync item addition to Supabase cart_items table
+    const targetUserId = getCartUserId();
+    console.log("🛒 Adding product to Supabase cart_items for targetUserId:", targetUserId, product.name);
+    addToCartInDb(targetUserId, product, 1);
   };
 
   const updateQuantity = (id: string, amount: number) => {
+    let nextQty = 0;
     setCart((prev) =>
       prev
         .map((item) => {
           if (item.product.id === id) {
-            const nextQty = item.quantity + amount;
+            nextQty = item.quantity + amount;
             return { ...item, quantity: nextQty };
           }
           return item;
         })
         .filter((item) => item.quantity > 0)
     );
+
+    const targetUserId = getCartUserId();
+    updateCartQuantityInDb(targetUserId, id, nextQty);
   };
 
   // Cart calculations
@@ -912,11 +959,9 @@ export default function ProductsPage() {
                   </div>
                   <button
                     onClick={() => {
-                      if (!user) {
-                        setIsCartOpen(false);
-                        setShowLoginModal(true);
-                        return;
-                      }
+                      const userId = getCartUserId();
+                      createOrderInDb(userId, cart, cartTotalPrice);
+                      clearCartInDb(userId);
                       setCart([]);
                       setIsCartOpen(false);
                       setOrderPlaced(true);

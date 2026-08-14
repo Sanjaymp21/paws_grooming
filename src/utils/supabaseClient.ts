@@ -244,3 +244,235 @@ export async function verifyPhoneOTP(phone: string, otp: string, fullName?: stri
     return { success: false, error: err.message || "OTP verification failed" };
   }
 }
+
+// ----------------------------------------------------
+// CART DATABASE HELPERS (cart_items table in Supabase)
+// ----------------------------------------------------
+export interface SupabaseCartItem {
+  id?: string;
+  user_id: string;
+  product_id: string;
+  product_name: string;
+  product_price: number;
+  product_image: string;
+  quantity: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export async function fetchCartItemsFromDb(userId: string): Promise<SupabaseCartItem[] | null> {
+  try {
+    const { data, error } = await supabase
+      .from("cart_items")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (error) {
+      console.warn("Supabase cart_items fetch notice:", error.message);
+      return null;
+    }
+
+    if (!data) return [];
+
+    console.log("🛒 Fetched items from Supabase cart_items:", data.length);
+    return data.map((item: any) => ({
+      id: item.id,
+      user_id: item.user_id,
+      product_id: item.product_id || item.item_id || item.id,
+      product_name: item.product_name || item.name || item.title || "Product",
+      product_price: Number(item.product_price || item.price || item.mrp || 0),
+      product_image: item.product_image || item.image || item.image_url || "",
+      quantity: Number(item.quantity || 1),
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+    }));
+  } catch (err) {
+    console.warn("cart_items fetch error:", err);
+    return null;
+  }
+}
+
+export async function addToCartInDb(
+  userId: string,
+  product: { id: string; name: string; mrp: number; discount: number; image: string },
+  quantity: number = 1
+) {
+  try {
+    const price = Math.round(product.mrp * (1 - product.discount / 100));
+
+    const { data: existingItems } = await supabase
+      .from("cart_items")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("product_id", product.id);
+
+    if (existingItems && existingItems.length > 0) {
+      const existing = existingItems[0];
+      const newQty = (existing.quantity || 1) + quantity;
+      const { data, error } = await supabase
+        .from("cart_items")
+        .update({ quantity: newQty, updated_at: new Date().toISOString() })
+        .eq("id", existing.id)
+        .select();
+
+      if (!error) {
+        console.log("🛒 Updated item quantity in Supabase cart_items:", data);
+        return { success: true, data };
+      }
+    }
+
+    const primaryPayload = {
+      user_id: userId,
+      product_id: product.id,
+      product_name: product.name,
+      product_price: price,
+      product_image: product.image,
+      quantity,
+    };
+
+    let { data, error } = await supabase
+      .from("cart_items")
+      .insert([primaryPayload])
+      .select();
+
+    if (!error) {
+      console.log("🛒 Inserted item into Supabase cart_items:", data);
+      return { success: true, data };
+    }
+
+    const fallbackPayloadA = {
+      user_id: userId,
+      product_id: product.id,
+      name: product.name,
+      price: price,
+      image: product.image,
+      quantity,
+    };
+
+    const resA = await supabase
+      .from("cart_items")
+      .insert([fallbackPayloadA])
+      .select();
+
+    if (!resA.error) {
+      console.log("🛒 Inserted item into Supabase cart_items (fallback A):", resA.data);
+      return { success: true, data: resA.data };
+    }
+
+    const fallbackPayloadB = {
+      user_id: userId,
+      product_id: product.id,
+      quantity,
+    };
+
+    const resB = await supabase
+      .from("cart_items")
+      .insert([fallbackPayloadB])
+      .select();
+
+    if (!resB.error) {
+      console.log("🛒 Inserted item into Supabase cart_items (fallback B):", resB.data);
+      return { success: true, data: resB.data };
+    }
+
+    console.warn("Supabase cart_items insert error:", error?.message || resA.error?.message);
+    return { success: false, error: error?.message || resA.error?.message };
+  } catch (err: any) {
+    console.warn("Supabase cart_items insert exception:", err?.message || err);
+    return { success: false, error: err?.message };
+  }
+}
+
+export async function updateCartQuantityInDb(userId: string, productId: string, newQuantity: number) {
+  try {
+    if (newQuantity <= 0) {
+      const { error } = await supabase
+        .from("cart_items")
+        .delete()
+        .eq("user_id", userId)
+        .eq("product_id", productId);
+
+      if (error) throw error;
+      return { success: true };
+    } else {
+      const { data, error } = await supabase
+        .from("cart_items")
+        .update({ quantity: newQuantity, updated_at: new Date().toISOString() })
+        .eq("user_id", userId)
+        .eq("product_id", productId)
+        .select();
+
+      if (error) throw error;
+      return { success: true, data };
+    }
+  } catch (err: any) {
+    console.warn("Supabase cart_items update notice:", err?.message || err);
+    return { success: false, error: err?.message };
+  }
+}
+
+export async function clearCartInDb(userId: string) {
+  try {
+    const { error } = await supabase
+      .from("cart_items")
+      .delete()
+      .eq("user_id", userId);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (err: any) {
+    console.warn("Supabase cart_items clear notice:", err?.message || err);
+    return { success: false, error: err?.message };
+  }
+}
+
+// ----------------------------------------------------
+// PRODUCT ORDERS DATABASE HELPERS (orders table in Supabase)
+// ----------------------------------------------------
+export interface SupabaseOrder {
+  id?: string;
+  order_code?: string;
+  user_id: string;
+  items: any[];
+  total_price: number;
+  status: "pending" | "confirmed" | "completed" | "cancelled";
+  created_at?: string;
+}
+
+export async function createOrderInDb(userId: string, cartItems: any[], totalPrice: number) {
+  try {
+    const order_code = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+    const payload = {
+      order_code,
+      user_id: userId,
+      items: cartItems.map((item) => ({
+        product_id: item.product.id,
+        name: item.product.name,
+        brand: item.product.brand,
+        quantity: item.quantity,
+        price: Math.round(item.product.mrp * (1 - item.product.discount / 100)),
+      })),
+      total_price: totalPrice,
+      status: "confirmed",
+    };
+
+    const { data, error } = await supabase
+      .from("orders")
+      .insert([payload])
+      .select();
+
+    if (error) {
+      console.warn("Supabase orders insert notice:", error.message);
+      return { success: false, error: error.message };
+    }
+
+    console.log("📦 Order saved to Supabase orders table:", data);
+    return { success: true, data };
+  } catch (err: any) {
+    console.warn("createOrderInDb exception:", err?.message || err);
+    return { success: false, error: err?.message };
+  }
+}
+
+
+
