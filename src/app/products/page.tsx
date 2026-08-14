@@ -208,7 +208,7 @@ const mockProducts: Product[] = [
     availability: "In Stock",
     discount: 15,
     mrp: 1250,
-    image: "https://images.unsplash.com/photo-1569591159212-b02ea8a9f239?w=1200&auto=format&fit=crop",
+    image: "/products/bentonite_cat_litter.png",
     description: "Ultra-premium bentonite clay cat litter. Forms instant hard clumps for easy scooping, trapping moisture and unpleasant odors immediately."
   },
   {
@@ -234,7 +234,7 @@ const mockProducts: Product[] = [
     availability: "In Stock",
     discount: 25,
     mrp: 2999,
-    image: "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=1200&auto=format&fit=crop",
+    image: "/products/soft_cat_bed.png",
     description: "Ultra-soft plush cat bed. The self-warming fabric mimics a mother's fur, providing a calming and comfortable nesting space."
   },
   {
@@ -247,7 +247,7 @@ const mockProducts: Product[] = [
     availability: "In Stock",
     discount: 10,
     mrp: 650,
-    image: "https://images.unsplash.com/photo-1608454509000-193efc4fc2a2?w=1200&auto=format&fit=crop",
+    image: "/products/stainless_steel_cat_bowl.png",
     description: "Whisker-friendly shallow ceramic feeding dish. Reduces whisker fatigue during feeding and features a stable, non-slip base."
   },
   {
@@ -260,7 +260,7 @@ const mockProducts: Product[] = [
     availability: "In Stock",
     discount: 15,
     mrp: 1899,
-    image: "https://images.unsplash.com/photo-1597626118021-c522b4a529ee?w=1200&auto=format&fit=crop",
+    image: "/products/cat_grooming_brush.png",
     description: "Stainless steel deshedding edge designed to reach deep undercoat without damaging top coat. Reduces loose hair shedding by up to 90%."
   },
   {
@@ -273,21 +273,21 @@ const mockProducts: Product[] = [
     availability: "In Stock",
     discount: 12,
     mrp: 799,
-    image: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=1200&auto=format&fit=crop",
+    image: "/products/feather_cat_toy.png",
     description: "Wobbling base toy featuring a spinning feather wand. Awakens the cat's natural hunting instinct, encouraging hours of healthy active play."
   },
   {
     id: "cat-10",
-    brand: "Himalaya",
-    name: "Cat Shampoo",
+    brand: "Beeps",
+    name: "Beeps Cat Care Shampoo",
     category: "Grooming",
-    rating: 4.4,
-    reviews: 54,
+    rating: 4.8,
+    reviews: 64,
     availability: "In Stock",
-    discount: 5,
-    mrp: 390,
-    image: "https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?w=1200&auto=format&fit=crop",
-    description: "Gentle soap-free cat shampoo. Specially pH balanced for sensitive feline skin, leaving the coat smelling clean and looking lustrous."
+    discount: 10,
+    mrp: 590,
+    image: "/products/beeps_cat_shampoo.png",
+    description: "Gentle and easy-to-rinse cat care shampoo specially formulated for cats. Leaves the coat soft, clean, and pleasantly scented."
   }
 ];
 
