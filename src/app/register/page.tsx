@@ -20,6 +20,15 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
+    const cleanedPhone = phone.replace(/\D/g, "");
+    const localPhone = cleanedPhone.length > 10 ? cleanedPhone.slice(-10) : cleanedPhone;
+    if (localPhone.length !== 10) {
+      const errMsg = "Please enter a valid 10-digit phone number.";
+      setError(errMsg);
+      alert(errMsg);
+      return;
+    }
+
     if (!agreeTerms) {
       setError("You must agree to the Terms of Service & Privacy Policy.");
       return;
@@ -189,9 +198,14 @@ export default function RegisterPage() {
                     <input
                       id="reg-phone"
                       type="tel"
-                      placeholder="+91 98765 43210"
+                      maxLength={10}
+                      placeholder="9876543210"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => {
+                        const digits = e.target.value.replace(/\D/g, "");
+                        const formatted = digits.length > 10 && digits.startsWith("91") ? digits.slice(-10) : digits.slice(0, 10);
+                        setPhone(formatted);
+                      }}
                       className="w-full bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl pl-11 pr-4 py-3 text-sm font-inter font-semibold text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 shadow-sm"
                       required
                     />

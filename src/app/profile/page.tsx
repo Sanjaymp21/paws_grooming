@@ -53,8 +53,9 @@ export default function ProfilePage() {
       setUser(currentUser);
 
       if (currentUser) {
-        setFullName(currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || "");
-        setPhone(currentUser.user_metadata?.phone || currentUser.phone || "");
+        const rawPhone = currentUser.user_metadata?.phone || currentUser.phone || "";
+        const phoneDigits = rawPhone.replace(/\D/g, "");
+        setPhone(phoneDigits.length > 10 ? phoneDigits.slice(-10) : phoneDigits);
 
         // Fetch bookings/applications
         try {
@@ -96,6 +97,16 @@ export default function ProfilePage() {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setUpdateMsg(null);
+
+    const cleanedPhone = phone.replace(/\D/g, "");
+    const localPhone = cleanedPhone.length > 10 ? cleanedPhone.slice(-10) : cleanedPhone;
+    if (phone && localPhone.length !== 10) {
+      const errMsg = "Please enter a valid 10-digit phone number.";
+      setUpdateMsg({ type: "error", text: errMsg });
+      alert(errMsg);
+      return;
+    }
+
     setUpdating(true);
 
     try {
@@ -328,9 +339,14 @@ export default function ProfilePage() {
                   <label className="text-xs font-poppins font-bold uppercase tracking-wider text-zinc-900">Phone Number</label>
                   <input
                     type="tel"
+                    maxLength={10}
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Enter phone number"
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, "");
+                      const formatted = digits.length > 10 && digits.startsWith("91") ? digits.slice(-10) : digits.slice(0, 10);
+                      setPhone(formatted);
+                    }}
+                    placeholder="Enter 10-digit phone number"
                     className="w-full bg-slate-50 border border-slate-200 focus:border-zinc-900 rounded-xl px-4 py-3 text-xs font-inter font-medium text-zinc-900 focus:outline-none"
                   />
                 </div>

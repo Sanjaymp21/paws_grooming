@@ -67,7 +67,8 @@ export default function AppointmentForm() {
           setEmail(data.user.email);
         }
         if (data.user.user_metadata?.phone) {
-          setPhone(data.user.user_metadata.phone);
+          const p = String(data.user.user_metadata.phone).replace(/\D/g, "");
+          setPhone(p.length > 10 ? p.slice(-10) : p);
         }
       }
     });
@@ -82,7 +83,8 @@ export default function AppointmentForm() {
           setEmail(session.user.email);
         }
         if (session.user.user_metadata?.phone) {
-          setPhone(session.user.user_metadata.phone);
+          const p = String(session.user.user_metadata.phone).replace(/\D/g, "");
+          setPhone(p.length > 10 ? p.slice(-10) : p);
         }
       }
     });
@@ -109,6 +111,12 @@ export default function AppointmentForm() {
     }
     if (!ownerName || !phone || !petName || !date || !time) {
       alert("Please fill in all required fields.");
+      return;
+    }
+    const cleanedPhone = phone.replace(/\D/g, "");
+    const localPhone = cleanedPhone.length > 10 ? cleanedPhone.slice(-10) : cleanedPhone;
+    if (localPhone.length !== 10) {
+      alert("Please enter a valid 10-digit phone number.");
       return;
     }
     setIsSubmitting(true);
@@ -268,7 +276,11 @@ export default function AppointmentForm() {
                         <input id="owner-name" type="text" placeholder="e.g. Ananth" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} className="w-full bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl px-4 py-3.5 text-sm font-inter font-semibold text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 shadow-sm" required />
                       </InputField>
                       <InputField id="owner-phone" label="Phone" required>
-                        <input id="owner-phone" type="tel" placeholder="+91 98765 43210" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl px-4 py-3.5 text-sm font-inter font-semibold text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 shadow-sm" required />
+                        <input id="owner-phone" type="tel" maxLength={10} placeholder="9876543210" value={phone} onChange={(e) => {
+                          const digits = e.target.value.replace(/\D/g, "");
+                          const formatted = digits.length > 10 && digits.startsWith("91") ? digits.slice(-10) : digits.slice(0, 10);
+                          setPhone(formatted);
+                        }} className="w-full bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl px-4 py-3.5 text-sm font-inter font-semibold text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 shadow-sm" required />
                       </InputField>
                       <InputField id="owner-email" label="Email (Optional)">
                         <input id="owner-email" type="email" placeholder="your@email.com" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-white border border-slate-200 focus:border-zinc-900 rounded-2xl px-4 py-3.5 text-sm font-inter font-semibold text-zinc-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/10 transition-all duration-200 shadow-sm" />
